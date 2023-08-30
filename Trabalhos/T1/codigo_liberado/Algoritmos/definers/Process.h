@@ -6,11 +6,11 @@ class Process{
         Process(int data, int time, int priority);
         ~Process();
         
-        void stop();
-        void load();
+        void stop();  // interrrupcao do processo
+        void start(); // incia ou volta a execucao do processo 
 
     private:
-        int id; // identificador
+        int const id; // identificador
         int data_init; // data de inicio
         int data_end; // data de fim
         int duration; // duracao

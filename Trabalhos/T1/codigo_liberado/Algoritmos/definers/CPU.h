@@ -11,11 +11,11 @@ class CPU{
         class Context{
 
             public:
-                Context() {_stack = 0;}; // Construtor vazio
+                Context() {}; // Construtor vazio
                 ~Context(); // Destrutor do contexto
 
                 void save(); // metodo para salvar o contexto
-                void load(); // metodo para carregar o contexto
+                void load(Context *cont); // metodo para carregar o contexto
             
             private:
                 char *_stack; // Process Stack (manter aqui ou nao ?)
@@ -29,6 +29,7 @@ class CPU{
                 std::list<Context*> pointerList; // Fila de contexto
         };
     
+    Context *cpu; // Contexto da CPU, para realizacao da troca de contexto
     static int switch_context(Context *from, Context *to);
 };
 
