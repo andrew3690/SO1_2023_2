@@ -13,7 +13,7 @@ class Process: public CPU{
     int id; // identificador
 
     private:
-        CPU *ctxtpointer; // ponteiro de contexto do processo
+        CPU::Context *ctxtpointer; // ponteiro de contexto do processo
         int data_init; // data de inicio
         int data_end; // data de fim
         int duration; // duracao

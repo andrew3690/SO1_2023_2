@@ -10,7 +10,7 @@ Process::Process(int data, int time, int priority){
 
 // destrutor do processo
 Process::~Process(){
-    // deleta o pointeiro do contexto
+    // deleta o pointeiro do contexto, decrementa o contador de id's
     delete ctxtpointer;
     id--;
 }

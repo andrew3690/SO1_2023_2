@@ -79,4 +79,3 @@ int main()
 	f.read_file();
 	f.print_processes_params();
 }
-
