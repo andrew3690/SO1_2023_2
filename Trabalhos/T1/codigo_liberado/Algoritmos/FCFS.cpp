@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-#include "Alg/FCFS.h"
-#include "Alg/FCFS.h"
-#include "read_file.cc"
-#include <iostream>
-
-class FCFS: public Process{
-    public:
-        FSFC(int id,int tempo);
-=======
 #include "FCFS.h"
 
 FCFS_Scheduler::FCFS_Scheduler(int id, int data_int, int time, int priority): 
@@ -23,5 +13,4 @@ void FCFS_Scheduler::escalonate(){
     // retira o processo da fila de prontos e utiliza no loop de
     pointer->dictList.pop_front();
     std::cout << "Contexto: "<<pointer->getid();    
->>>>>>> 389a107 (Ajustando makefile)
 };
