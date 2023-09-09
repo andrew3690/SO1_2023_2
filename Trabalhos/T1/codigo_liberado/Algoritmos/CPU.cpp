@@ -1,5 +1,7 @@
 #include "definers/CPU.h"
 #include <iostream>
+std::list<CPU::Context*> Context::pointerList;
+
 
 CPU::Context::Context(){
     Context *pointer = new Context(); // Criacao de novo contexto
@@ -8,20 +10,30 @@ CPU::Context::Context(){
 }
 
 
-void CPU::Context::save(){
-    // salva o contexto atual na fila de contextos
-    return pointerList.push_back(this);
-};
+CPU::Context* CPU::Context::save(){
+    // Salva o contexto atual na fila de contextos bloqueados
+    pointerList.push_back(this);
+    // Retorna o próprio contexto
+    return this;
+}
 
-void CPU::Context::load(){
-    // retorna o contexto a ser retirado da fila de prontos
-    return pointerList.remove(this);
+CPU::Context* CPU::Context::load(){  // metodo para carregar o contexto
+
+    if (!pointerList.empty()) {
+                return pointerList.front();
+    }
+    // caso a lista esteja vazia, retorna o ponteiro vazio
+    return nullptr;
 };
 
 CPU::Context::~Context()
 {
-    context_counter--; // decrementa o contador na destruicao de uma contexto
     delete pointer; // Libera a memoria alocada pelo processo
+    context_counter--; // decrementa o contador na destruicao de uma contexto
+    // se contador estiver zerado, a lista deve ser destruída, para liberar espaço de memória
+    if (context_counter == 0){
+        pointerList.clear();
+    }
 };
 
 int CPU::switch_context(Context *from, Context *to)
@@ -41,4 +53,5 @@ int CPU::switch_context(Context *from, Context *to)
     std::swap(from->_stack,to->_stack);
 
     to->load(); // Carrega o contexto a ser trocado para execucao
+    return 0;
 };

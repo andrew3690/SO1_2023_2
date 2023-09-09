@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <tuple>
 
 using namespace std;
 
@@ -19,6 +20,11 @@ public:
 		return os;
 	}
 	
+	// getters provisórios, só para perguntar pro professor se podemos usar isso aqui
+	int get_creation_time() const {return creation_time;};
+	int get_duration() const {return duration;};
+	int get_priority() const {return priority;};
+
 private:	
 	int creation_time;
 	int duration; //seconds
@@ -60,6 +66,19 @@ public:
 			cout << *p;
 		}
 	}
+	// Perguntar para o professor se posso fazer isso aqui:
+	// retorna uma tupla de informações do processo
+	std::vector<std::tuple<int, int, int>> get_process_params() {
+		std::vector<std::tuple<int, int, int>> params;
+
+		for (auto iter = processes.begin(); iter != processes.end(); ++iter) {
+			ProcessParams *p = *iter;
+			params.push_back(std::tuple<int, int, int>(p->get_creation_time(), p->get_duration(), p->get_priority()));
+		}
+
+    	return params;
+	}
+
 
 	~File() {
 		for(int i = 0; i < processes.size() ; i++) {
@@ -73,9 +92,9 @@ private:
 	vector<ProcessParams *> processes;
 };
 
-int main()
-{
-	File f;
-	f.read_file();
-	f.print_processes_params();
-}
+// int main()
+// {
+// 	File f;
+// 	f.read_file();
+// 	f.print_processes_params();
+// }
