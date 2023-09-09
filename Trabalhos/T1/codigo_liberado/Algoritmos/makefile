@@ -1,11 +1,11 @@
 CXX = g++
 CXXFLAGS = -std=c++11
 
-SRC = read_file.cc
+SRCS = Exec.cpp Process.cpp  CPU.cpp# Add Process.cpp here
 
 all: program
 
-program: $(SRC)
+program: $(SRCS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 run:
@@ -13,3 +13,4 @@ run:
 
 clean:
 	rm -f program
+
