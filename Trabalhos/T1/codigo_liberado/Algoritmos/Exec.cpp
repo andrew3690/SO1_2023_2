@@ -4,6 +4,8 @@
 #include "read_file.cc"
 #include "FCFS.h"
 
+
+
 int main (){
     // idéia:
     //  criar um loop que aplique a cada entrada diferente um algoritmo de escalonamento do processador
@@ -24,27 +26,32 @@ int main (){
 
         // Criando Objeto de Arquivo, e processando os parametros do arquivo
         File f;
-        f.read_file(); 
+        f.read_file();
+
         std::vector<std::tuple<int, int, int>> params = f.get_process_params();
         int count = 0;
+        std::vector<FCFS_Scheduler> schedulerInstances;
 
-        // 
         if(input == 6){
             break;
         }
         else {
             switch(input){
                 case 1:
-                        // FCFS
-                        // realiza uma iteração do loop para cada processo na lista de processo
-                        for (const auto& tuple : params) {
+                    // FCFS
+                    // realiza uma iteração do loop para cada processo na lista de processo
+                    for (const auto& tuple : params) {
                             int creation_time = std::get<0>(tuple);
                             int duration = std::get<1>(tuple);
                             int priority = std::get<2>(tuple);
+
+                            // count
                             count++;
-                            FCFS_Scheduler(count,creation_time,duration,priority);
-                        };
-                        break;
+
+                            std::cout <<"Creation Time: " <<creation_time <<" Duration: "<<duration <<" Priority: "<< priority<<"\n";
+                            
+                            FCFS_Scheduler schedulerInstance(count,creation_time,duration,priority);
+                    };
                 case 2:
                     // SJF
                         break;

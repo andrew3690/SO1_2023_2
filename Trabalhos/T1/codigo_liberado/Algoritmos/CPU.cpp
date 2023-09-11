@@ -1,6 +1,9 @@
 #include "definers/CPU.h"
 #include <iostream>
-std::list<CPU::Context*> Context::pointerList;
+
+// Definitions for static members of CPU::Context
+std::list<CPU::Context*> CPU::Context::pointerList;
+int CPU::Context::context_counter;
 
 
 CPU::Context::Context(){
@@ -20,7 +23,7 @@ CPU::Context* CPU::Context::save(){
 CPU::Context* CPU::Context::load(){  // metodo para carregar o contexto
 
     if (!pointerList.empty()) {
-                return pointerList.front();
+        return pointerList.front();
     }
     // caso a lista esteja vazia, retorna o ponteiro vazio
     return nullptr;

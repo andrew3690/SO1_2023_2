@@ -6,6 +6,7 @@
 using namespace std;
 
 class Process: public CPU{
+    
     public:
         Process(int id, int data, int time, int priority);
         ~Process(); 
@@ -20,13 +21,7 @@ class Process: public CPU{
         int gettime(){return data_init;};
         int getpriority(){return priority;};
         int getid() {return _id;};
-        Process* FindProcessById(const std::list<Process*>& processList, int id);
-
-        
-        // Filas de processo prontos e pocessos bloqueados    
-        static std::list<Process*> Ready_queue;   // Fila de processos prontos
-        static std::list<Process*> Blocked_queue; // Fila de processo bloqueados
-        // const std::list<Process*>& processList;
+        // Process* FindProcessById(const std::list<Process*>& processList, int id);
 
     private:
 
@@ -57,6 +52,11 @@ class Process: public CPU{
         int tunarround_time = 0;
         int read_list_avg_time = 0;
         int switch_context_count = 0;
+        
+        // Filas de processo prontos e pocessos bloqueados
+        static std::list<Process*> Ready_queue;   // Fila de processos prontos
+        static std::list<Process*> Blocked_queue; // Fila de processo bloqueados
+
 };
 
 

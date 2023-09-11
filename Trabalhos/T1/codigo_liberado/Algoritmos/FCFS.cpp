@@ -5,8 +5,10 @@ Process(id, data_int, time, priority){
     // inserindo o processo na lista de prioridades do algoritmo
     // dado que o algoritmo não possui prioridades setadas, é só inserir o par na lista
     // ao escalonar é só obter o processo mais recente
+    std::cout << "Iniciando o escalonador FCFS" << "\n";
     dictList.push_back(std::make_pair(id,std::make_pair(data_int,time)));
-    std::cout << "Iniciando o escalonador FCFS";
+    
+    escalonate();
 };
 
 void FCFS_Scheduler::escalonate(){
