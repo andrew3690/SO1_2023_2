@@ -34,8 +34,6 @@ class Process: public CPU{
         int gettime(){return data_init;};
         int getpriority(){return priority;};
         int getid() {return _id;};
-        // State getState() {return state;};
-        
         // Process* FindProcessById(const std::list<Process*>& processList, int id);
 
         // Filas de processo prontos e pocessos bloqueados

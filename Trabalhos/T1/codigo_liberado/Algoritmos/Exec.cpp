@@ -2,7 +2,7 @@
 #include "definers/Process.h"
 #include "definers/CPU.h"
 #include "read_file.cc"
-#include "definers/FCFS.h"
+#include "FCFS.h"
 
 
 
@@ -55,6 +55,7 @@ int main (){
                     break;
                 case 2:
                     // SJF
+                    sjf_instance->schedule();
                         break;
                 case 3:
                     // Prioridade sem preempção
