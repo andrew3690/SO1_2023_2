@@ -21,6 +21,7 @@ class Process: public CPU{
         int gettime(){return data_init;};
         int getpriority(){return priority;};
         int getid() {return _id;};
+        int getDuration() {return duration;};
         // Process* FindProcessById(const std::list<Process*>& processList, int id);
 
     private:

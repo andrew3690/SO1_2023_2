@@ -14,12 +14,12 @@ class ShortestJobFirst_Scheduler
         ~ShortestJobFirst_Scheduler();
 
 
-        void add_process(int process_ready);
-        int schedule();
+        void add_process(Process *process_ready);
+        void schedule();
         void sort();
 
     private:
-        vector<int> process_list; // lista de processos
+        vector<Process> process_list; // lista de processos
 
 };
 
