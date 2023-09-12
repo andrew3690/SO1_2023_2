@@ -15,17 +15,35 @@ class Process: public CPU{
         void start(); // incia ou volta a execucao do processo
         int makeready(int id); // faz o processo sair da fila de bloqueados para a fila de prontos, DEPENDE DO ESCANLONADOR UTILIZADO
         void exec(); // método para execução do processo
-        void escalonate(); // método que os algoritmos de escalonamento chamam para escalonar processos
+        // void escalonate(); // método que os algoritmos de escalonamento chamam para escalonar processos
+        // Printa o diagrama de execução dos processos
+        void printdiagram();
+        // Finaliza o processo:
+        void endprocess();
+
+        //setter das variáveis do trabalho
+        int setTurnarroundTimer(){return tunarround_time++;};
+        int setswitchcontextcounter(){return switch_context_count++;};
+        int setreadlistavgcounter(){return read_list_avg_time++;};
+
+        int getTurnarroundTime(){return tunarround_time;};
+        int getswitchcontextcounter(){return switch_context_count;};
+        int getreadlistavgcounter(){return read_list_avg_time;};
 
         // getters de tempo e prioridade
         int gettime(){return data_init;};
         int getpriority(){return priority;};
         int getid() {return _id;};
+        // State getState() {return state;};
+        
         // Process* FindProcessById(const std::list<Process*>& processList, int id);
 
-    private:
-
+        // Filas de processo prontos e pocessos bloqueados
+        static std::list<Process*> Ready_queue;   // Fila de processos prontos
+        static std::list<Process*> Blocked_queue; // Fila de processo bloqueados
         CPU::Context *ctxtpointer; // ponteiro de contexto do processo
+        
+    private:
         Process *pointer; // ponteiro para o processo
         Process *running; // ponteiro para o processo que está com a cpu no momento
 
@@ -52,10 +70,6 @@ class Process: public CPU{
         int tunarround_time = 0;
         int read_list_avg_time = 0;
         int switch_context_count = 0;
-        
-        // Filas de processo prontos e pocessos bloqueados
-        static std::list<Process*> Ready_queue;   // Fila de processos prontos
-        static std::list<Process*> Blocked_queue; // Fila de processo bloqueados
 
 };
 

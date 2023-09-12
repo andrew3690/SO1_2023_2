@@ -1,4 +1,4 @@
-#include "Alg/SJF.h"
+#include "definers/SJF.h"
 
 
 ShortestJobFirst_Scheduler::ShortestJobFirst_Scheduler(){} //constructor

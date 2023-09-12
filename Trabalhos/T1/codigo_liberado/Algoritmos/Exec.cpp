@@ -2,7 +2,7 @@
 #include "definers/Process.h"
 #include "definers/CPU.h"
 #include "read_file.cc"
-#include "FCFS.h"
+#include "definers/FCFS.h"
 
 
 
@@ -28,9 +28,9 @@ int main (){
         File f;
         f.read_file();
 
+        // obtém os parametros dos processos
         std::vector<std::tuple<int, int, int>> params = f.get_process_params();
         int count = 0;
-        std::vector<FCFS_Scheduler> schedulerInstances;
 
         if(input == 6){
             break;
@@ -49,9 +49,10 @@ int main (){
                             count++;
 
                             std::cout <<"Creation Time: " <<creation_time <<" Duration: "<<duration <<" Priority: "<< priority<<"\n";
-                            
-                            FCFS_Scheduler schedulerInstance(count,creation_time,duration,priority);
+                            FCFS_Scheduler* schedulerInstance = new FCFS_Scheduler(count, creation_time, duration, priority);
+                            // schedulerInstance->escalonate();
                     };
+                    break;
                 case 2:
                     // SJF
                         break;
