@@ -5,7 +5,6 @@ std::list<Process*> Process::Ready_queue;
 std::list<Process*> Process::Blocked_queue;
 const std::list<Process*>* processList; // Change to pointer
 
-
 // construtor da classe de processo
 Process::Process(int id,int data, int time, int priority){
     // incrementa o id do processo
@@ -33,7 +32,7 @@ Process::Process(int id,int data, int time, int priority){
     // insere o processo no fim da fila de prontos 
     Ready_queue.push_back(pointer);
     
-    // incrementa o tempo de permanecia do processo na lista de processos prontos
+    // incrementa o tempo de permaencia do processo na lista de processos prontos
     pointer->setTurnarroundTimer();
 }
 
@@ -44,16 +43,6 @@ Process::~Process(){
     delete pointer;
     // se a fila de processos estiver vazia, deletar ela também
 }
-
-// // método genérico para obter um processo das listas de prontos e lista de bloqueados
-// Process* FindProcessById(const std::list<Process*>& processList, int id) {
-//     for(Process* process: processList){
-//         if(process->getid() == id){
-//             return process;
-//         };
-//     }
-//     return nullptr;
-// }
 
 // a idéia é ter um método que retira o processo da fila de bloqueados e o insere na fila de prontos
 int Process::makeready(int id){
@@ -72,7 +61,7 @@ int Process::makeready(int id){
     Ready_queue.push_back(pointer);
 
     // incrementa o tempo de permanecia do processo na lista de processos prontos
-    pointer->read_list_avg_time++;
+    pointer->setreadlistavgcounter();
     
     return 0;
 }
@@ -127,9 +116,7 @@ void Process::exec(){
         // primeiro: é necessário decerementar o tempo de execução do processo
         if(this->timeexec-- == 0){
             this->stop();
-        }else{
-
-        };
+        }else{};
     };
 }
 
@@ -139,3 +126,13 @@ void Process::endprocess(){
     // Chama o destrutor do Processo
     this->~Process();
 }
+
+// // método genérico para obter um processo das listas de prontos e lista de bloqueados
+// Process* FindProcessById(const std::list<Process*>& processList, int id) {
+//     for(Process* process: processList){
+//         if(process->getid() == id){
+//             return process;
+//         };
+//     }
+//     return nullptr;
+// }
