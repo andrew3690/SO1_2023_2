@@ -3,7 +3,7 @@
 #include "definers/CPU.h"
 #include "read_file.cc"
 #include "FCFS.h"
-
+#include "Alg/SJF.h"
 
 
 int main (){
@@ -31,6 +31,7 @@ int main (){
         std::vector<std::tuple<int, int, int>> params = f.get_process_params();
         int count = 0;
         std::vector<FCFS_Scheduler> schedulerInstances;
+        ShortestJobFirst_Scheduler* sjf_instance = new ShortestJobFirst_Scheduler();
 
         if(input == 6){
             break;
@@ -54,6 +55,7 @@ int main (){
                     };
                 case 2:
                     // SJF
+                    sjf_instance->schedule();
                         break;
                 case 3:
                     // Prioridade sem preempção
