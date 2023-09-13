@@ -1,16 +1,16 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -I/definers
+CXXFLAGS = -std=c++11 -Idefiners
 
-SRCS = Exec.cpp Process.cpp  CPU.cpp FCFS.cpp# Add Process.cpp here
+SRCS = $(wildcard *.cpp)   # This will include all .cpp files in the current directory
+HDRS = $(wildcard definers/*.h)   # This will include all .h files in the 'definers' directory
 
 all: program
 
-program: $(SRCS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+program: $(SRCS) $(HDRS)
+	$(CXX) $(CXXFLAGS) -o $@ $(SRCS)
 
 run:
 	./program
 
 clean:
 	rm -f program
-

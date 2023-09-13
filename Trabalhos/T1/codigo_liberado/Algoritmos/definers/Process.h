@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-class Process: public CPU{
+class Process: public CPU::Context{
     
     public:
         Process(){}; // Construtor vazio
@@ -14,9 +14,9 @@ class Process: public CPU{
         
         void stop();  // interrrupcao do processo
         void start(); // incia ou volta a execucao do processo
-        int makeready(int id); // faz o processo sair da fila de bloqueados para a fila de prontos, DEPENDE DO ESCANLONADOR UTILIZADO
+        int makeready(int id); // faz o processo sair da fila de bloqueados para a fila de prontos
         void exec(); // método para execução do processo
-        // void escalonate(); // método que os algoritmos de escalonamento chamam para escalonar processos
+        
         // Printa o diagrama de execução dos processos
         void printdiagram();
         // Finaliza o processo:
@@ -31,31 +31,34 @@ class Process: public CPU{
         int getswitchcontextcounter(){return switch_context_count;};
         int getreadlistavgcounter(){return read_list_avg_time;};
 
+        // setters de tempo e prioridade
+        void settime(int time){duration = time;};
+        void setdata(int data){data_init = data;};
+        void sepriority(int priority){priority_ = priority;};
+
         // getters de tempo e prioridade
         int gettime(){return data_init;};
-        int getpriority(){return priority;};
+        int getpriority(){return priority_;};
         int getid() {return _id;};
-        // Process* FindProcessById(const std::list<Process*>& processList, int id);
 
         // Filas de processo prontos e pocessos bloqueados
         static std::list<Process*> Ready_queue;   // Fila de processos prontos
         static std::list<Process*> Blocked_queue; // Fila de processo bloqueados
         
+        CPU *cpu; // ponteiro para a cpu
         Context *ctxtpointer; // ponteiro de contexto do processo
         Process *pointer; // ponteiro para o processo
         Process *running; // ponteiro para o processo que está com a cpu no momento
         
     private:
-        int _id; // identificador do processo
 
-        // Time diference
+        // Atributos do Processo
+        int _id; // identificador do processo
         int data_init; // data de inicio
         int data_end; // data de fim
         int duration; // duracao, variável que faz uma estimativa do tempo de exeução do processo 
         int timeexec; // tempo de execucao, variável que acompanha a exeucção do processo
-        
-        // Priority var
-        int priority; // prioridade do processo
+        int priority_; // prioridade do processo
 
         enum State // Estado atual
         {
@@ -68,8 +71,5 @@ class Process: public CPU{
         int tunarround_time = 0;
         int read_list_avg_time = 0;
         int switch_context_count = 0;
-
 };
-
-
 #endif

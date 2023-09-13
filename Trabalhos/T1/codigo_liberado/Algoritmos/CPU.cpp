@@ -39,6 +39,7 @@ CPU::Context* CPU::Context::load(){  // metodo para carregar o contexto
 
 CPU::Context::~Context()
 {
+    std::cout << " Finalizacao do contexto\n";
     // Libera a memoria alocada pelo processo
     // context_counter--; // decrementa o contador na destruicao de uma contexto
     // se contador estiver zerado, a lista deve ser destruída, para liberar espaço de memória

@@ -17,9 +17,9 @@ int main (){
     
     File f; // Instanciando objeto de arquivp
     f.read_file(); // leitura dos dados do arquivo
-    
+
     int input; // entrada que define qual escalonador utilizar
-    CPU::Context* cpu = new CPU::Context(); // criacao do contexto da cpu
+    CPU::Context* cpu; // criacao do contexto da cpu
     
     while(true){
         // Carregar os processo na fila de bloqueados da CPU
@@ -39,7 +39,7 @@ int main (){
             count++;
             
             std::cout << "Id: " << count << " Creation Time: " << creation_time << " Duration :" << duration << " Priority: " <<priority <<"\n";
-            Process* process = new Process(count,creation_time,duration,priority);
+            Process(count,creation_time,duration,priority);
         }
 
         // estrutura de escolha do processo
@@ -51,7 +51,6 @@ int main (){
                 case 1:
                     // FCFS
                     // realiza uma iteração do loop para cada processo na lista de processo
-                    FCFS_Scheduler();
                 case 2:
                     // SJF
                     // sjf_instance->schedule();

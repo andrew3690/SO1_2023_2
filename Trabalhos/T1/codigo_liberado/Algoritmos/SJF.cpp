@@ -18,7 +18,7 @@ void ShortestJobFirst_Scheduler::schedule()
     int counter = 0;
     process.start();
     while (process_list.size() > 0) {
-        sleep(1);
+        // sleep(1);
         std::cout << "executou no instante " << counter << "-" << counter+1 << std::endl;
         counter++;
     }
@@ -28,15 +28,15 @@ void ShortestJobFirst_Scheduler::schedule()
 
 void ShortestJobFirst_Scheduler::sort() 
 {
-    int size = process_list.size();
-    for (int i = 1; i < size; i++) {
-        Process key = process_list[i];
-        int j = i-1;
+    // int size = process_list.size();
+    // for (int i = 1; i < size; i++) {
+    //     Process key = process_list[i];
+    //     int j = i-1;
 
-        while (key.getDuration() < process_list[j].getDuration() && j >= 0) {
-            process_list[j + 1] = process_list[j];
-            j--;
-        }
-        process_list[j+1] = key;
-    }
+    //     while (key.getDuration() < process_list[j].getDuration() && j >= 0) {
+    //         process_list[j + 1] = process_list[j];
+    //         j--;
+    //     }
+    //     process_list[j+1] = key;
+    // }
 }

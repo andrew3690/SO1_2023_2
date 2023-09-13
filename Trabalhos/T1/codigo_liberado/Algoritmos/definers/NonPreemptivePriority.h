@@ -2,7 +2,7 @@
 #define NONPPRIORITY_SCHEDULER_H
 
 #include <vector>
-#include "../definers/Process.h"
+#include "Process.h"
 
 
 class NonPPriorityScheduler

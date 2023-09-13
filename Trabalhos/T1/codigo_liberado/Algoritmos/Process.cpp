@@ -5,31 +5,28 @@ std::list<Process*> Process::Blocked_queue;
 
 // construtor da classe de processo
 Process::Process(int id,int data, int time, int priority){
-    // incrementa o id do processo
-
-    // cria o contexto do processo
-    ctxtpointer = new Context();
-
-    // obtém o tempo de criação do processo
-    pointer->data_init = pointer->gettime();
     
-    std::cout << "Tempo de criacao do processo: "<< pointer->gettime() << "\n";
+    // obtém o tempo de criação do processo
+    this->settime(time);
+    this->setdata(data);
+    this->sepriority(priority);
+
+    std::cout << "Tempo de criacao do processo: "<< this->gettime() << "\n";
     
     // Seta o estado do contexto e insere na fila de processos prontos
-    pointer->state = Ready;
+    // pointer->state = Ready;
 
     // Prints de debug
     std::cout << "Processo Criado\n";
-    std::cout << "id: " << pointer->getid() << "time: " << pointer->gettime() << "prioridade: "<< pointer->getpriority() <<" \n";
+    std::cout << "id: " << this->getid() << " time: " << this->gettime() << "prioridade: "<< this->getpriority() <<" \n";
     
     // Salva o contexto e insere o processo na fila de prontos,
-    ctxtpointer->save();
 
     // insere o processo no fim da fila de prontos 
-    Ready_queue.push_back(pointer);
+    // Ready_queue.push_back(pointer);
     
     // incrementa o tempo de permaencia do processo na lista de processos prontos
-    pointer->setTurnarroundTimer();
+    this->setTurnarroundTimer();
 }
 
 // destrutor do processo
@@ -66,13 +63,11 @@ void Process::stop(){
         this->state = Blocked; 
         // salva o contexto do processo
         pointer->ctxtpointer->save();
-        // a idéia é trocar o contexto atual para o contexto da cpu
-        // É necessário fazer uma idéia de como decidir se o escalonador ou o processo está esperando uma entrada
-            // se o escalonador selecionar outro processo, insere o processo na fila de prontos
-            // se o processo está esperando input, insere o processo na fila de bloqueados
-        CPU::switch_context(pointer->ctxtpointer, cpu);
+        // realiza troca de contexto aqui para a cpu
+        cpu->switch_context(this->ctxtpointer,cpu->pointer);
+
         // incrementa contador de trocas de contexto do processo
-        pointer->setswitchcontextcounter();
+        this->setswitchcontextcounter();
     }
 }
 
@@ -89,7 +84,7 @@ void Process::start(){
     };
 
     // realiza a troca do contexto da cpu para o contexto atual
-    CPU::switch_context(cpu,ctxtpointer);
+    cpu->switch_context(cpu->pointer,running->ctxtpointer);
 
     // incrementa a contagem de troca de processos
     running->setswitchcontextcounter();
