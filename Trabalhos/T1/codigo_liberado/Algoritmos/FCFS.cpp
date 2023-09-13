@@ -10,21 +10,25 @@ FCFS_Scheduler::FCFS_Scheduler(){
 
 void FCFS_Scheduler::escalonate(){
     // Verfica se a lista de prontos está vazia..
+    std::cout << "Iniciando o escalonamento" << "\n";
     if (!Ready_queue.empty()) {
+        // std::cout << "Retirando o primeiro elemento da lista de prontos" << "\n";
         // Obtendo o primeiro elemento da lista de prontos ....
         Process * firstProcess = Ready_queue.front();
-        
-        //...retira o elemento da fila...
-        Ready_queue.pop_front();
 
         // ...Inicia o processamento
         firstProcess->start();
 
-    } else{
+    } else {
         // caso a fila esteja vazia, chama-se o destrutor da classe, sinalizando a finalização do escalonamento
         FCFS_Scheduler::~FCFS_Scheduler();
     }
 };
+
+void FCFS_Scheduler::endscalonate(){
+    // Realizar chamadas dos processos e chamar o destrutor
+    this->~FCFS_Scheduler();
+}
 
 FCFS_Scheduler::~FCFS_Scheduler(){
     delete this;

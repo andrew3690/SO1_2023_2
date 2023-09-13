@@ -24,8 +24,9 @@ int main (){
     while(true){
         // Carregar os processo na fila de bloqueados da CPU
 
-        std::cout << " Digite qual algoritmo de escalonamento deseja usar \n";
-        std::cout << "1-FCFS, 2- SJF, 3- Por prioridade sem preempção, 4- Por prioridade com preempção, 5- Round Robin com quantum, de 2s sem prioridade, 6-Finalizar \n";
+        std::cout << " Digite qual algoritmo de escalonamento deseja usar: \n";
+        std::cout << "1-FCFS, 2- SJF, 3- Por prioridade sem preempção, 4- Por prioridade com preempção \n", 
+        std::cout << "5- Round Robin com quantum, de 2s sem prioridade, 6-Finalizar \n";
         std::cin >> input;
 
         int count = 0; // contador
@@ -38,7 +39,7 @@ int main (){
 
             count++;
             
-            std::cout << "Id: " << count << " Creation Time: " << creation_time << " Duration :" << duration << " Priority: " <<priority <<"\n";
+            // std::cout << "Id: " << count << " Creation Time: " << creation_time << " Duration :" << duration << " Priority: " <<priority <<"\n";
             Process(count,creation_time,duration,priority);
         }
 
@@ -51,6 +52,7 @@ int main (){
                 case 1:
                     // FCFS
                     // realiza uma iteração do loop para cada processo na lista de processo
+                    FCFS_Scheduler();
                 case 2:
                     // SJF
                     // sjf_instance->schedule();
@@ -67,6 +69,6 @@ int main (){
             };
         };
     };
-    delete cpu;
 
+    delete cpu;
 };

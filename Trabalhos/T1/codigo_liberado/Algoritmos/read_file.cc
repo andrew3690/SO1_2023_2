@@ -66,6 +66,7 @@ public:
 			cout << *p;
 		}
 	}
+	
 	// Perguntar para o professor se posso fazer isso aqui:
 	// retorna uma tupla de informações do processo
 	std::vector<std::tuple<int, int, int>> get_process_params() {

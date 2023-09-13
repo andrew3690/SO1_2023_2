@@ -1,4 +1,4 @@
-#include "NonPreemptivePriority.h"
+#include "../definers/NonPreemptivePriority.h"
 
 
 NonPPriorityScheduler::NonPPriorityScheduler() {}; //construtor

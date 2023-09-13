@@ -12,21 +12,24 @@ class Process: public CPU::Context{
         Process(int id, int data, int time, int priority); // Construtor com parametros
         ~Process(); 
         
+        // metodos do processo
         void stop();  // interrrupcao do processo
         void start(); // incia ou volta a execucao do processo
         int makeready(int id); // faz o processo sair da fila de bloqueados para a fila de prontos
         void exec(); // método para execução do processo
         
         // Printa o diagrama de execução dos processos
-        void printdiagram();
+        // void printdiagram();
+        
         // Finaliza o processo:
         void endprocess();
 
-        //setter das variáveis do trabalho
+        // setters das variáveis do trabalho
         int setTurnarroundTimer(){return tunarround_time++;};
         int setswitchcontextcounter(){return switch_context_count++;};
         int setreadlistavgcounter(){return read_list_avg_time++;};
 
+        // getters das variaveis do trabalho 
         int getTurnarroundTime(){return tunarround_time;};
         int getswitchcontextcounter(){return switch_context_count;};
         int getreadlistavgcounter(){return read_list_avg_time;};
@@ -36,7 +39,11 @@ class Process: public CPU::Context{
         void setdata(int data){data_init = data;};
         void sepriority(int priority){priority_ = priority;};
 
+        // metodo para decrementar o tempo de existencia do processo
+        void dectime(){duration--;};
+
         // getters de tempo e prioridade
+        int getduration(){return duration;};
         int gettime(){return data_init;};
         int getpriority(){return priority_;};
         int getid() {return _id;};
@@ -47,7 +54,6 @@ class Process: public CPU::Context{
         
         CPU *cpu; // ponteiro para a cpu
         Context *ctxtpointer; // ponteiro de contexto do processo
-        Process *pointer; // ponteiro para o processo
         Process *running; // ponteiro para o processo que está com a cpu no momento
         
     private:
