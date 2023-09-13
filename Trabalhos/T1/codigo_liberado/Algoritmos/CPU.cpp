@@ -2,59 +2,54 @@
 #include <iostream>
 
 // Definitions for static members of CPU::Context
-std::list<CPU::Context*> CPU::Context::pointerList;
-int CPU::Context::context_counter;
+// std::list<CPU::Context*> CPU::Context::pointerList;
+// int CPU::Context::context_counter;
 
 
 CPU::Context::Context(){
-    Context *pointer = new Context(); // Criacao de novo contexto
-    pointerList.push_back(pointer);   // Inserindo no fim da lista de processos prontos
-    context_counter++; // incrementa o contador de contextos, na criacao de um dado contexto
+    std::cout << " Criacao do contexto\n";
+    // pointerList.push_back(pointer);   // Inserindo no fim da lista de processos da CPU
+    // context_counter++; // incrementa o contador de contextos, na criacao de um dado contexto
 }
 
-
 CPU::Context* CPU::Context::save(){
-    // Salva o contexto atual na fila de contextos bloqueados
-    pointerList.push_back(this);
-    // Retorna o próprio contexto
+    // Salve o estado atual da CPU, incluindo SP, PC, ST e registradores
+    SP = this->getSP();
+    PC = this->getPC();
+    ST = this->getST();
+    // Salve os registradores de propósito geral
+    for (int i = 0; i < 6; i++) {
+        registers[i] = this->registers[i];
+    }
     return this;
 }
 
 CPU::Context* CPU::Context::load(){  // metodo para carregar o contexto
-
-    if (!pointerList.empty()) {
-        return pointerList.front();
+    // Restaure o estado da CPU, incluindo SP, PC, ST e registradores
+    /* configure SP, PC, ST com os valores salvos */;
+    // Restaure os registradores de propósito geral
+    this->setSP(SP);
+    this->setPC(PC);
+    this->setST(ST);
+    for (int i = 0; i < 6; i++) {
+        this->registers[i] = registers[i];
     }
-    // caso a lista esteja vazia, retorna o ponteiro vazio
-    return nullptr;
+    return this;
 };
 
 CPU::Context::~Context()
 {
-    delete pointer; // Libera a memoria alocada pelo processo
-    context_counter--; // decrementa o contador na destruicao de uma contexto
+    // Libera a memoria alocada pelo processo
+    // context_counter--; // decrementa o contador na destruicao de uma contexto
     // se contador estiver zerado, a lista deve ser destruída, para liberar espaço de memória
-    if (context_counter == 0){
-        pointerList.clear();
-    }
 };
 
-int CPU::switch_context(Context *from, Context *to)
-{
-    // ideia:
-    // salvar o contexto `from` na lista de contextos
-    // trocando os valores dos registradores, como fazer isso de forma que os atributos sejam privados ?
-    // colocar o contexto `to` para rodar
+int CPU::switch_context(Context *from, Context *to) {
+    // Salva o contexto atual no objeto 'from'
+    from->save();
 
-    from->save(); // Salva o contexto da cpu na lista de contextos
+    // carrega o contexto `to`
+    to->load();
 
-    // realiza a troca dos valores de registradores e pilha de contexto
-    std::swap(from->SP,to->SP);
-    std::swap(from->PC,to->PC);
-    std::swap(from->ST,to->ST);
-    std::swap(from->registers,to->registers);
-    std::swap(from->_stack,to->_stack);
-
-    to->load(); // Carrega o contexto a ser trocado para execucao
-    return 0;
-};
+    return 0; // Ou algum código de status apropriado
+}

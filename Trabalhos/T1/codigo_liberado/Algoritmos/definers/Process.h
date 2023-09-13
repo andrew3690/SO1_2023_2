@@ -8,7 +8,8 @@ using namespace std;
 class Process: public CPU{
     
     public:
-        Process(int id, int data, int time, int priority);
+        Process(){}; // Construtor vazio
+        Process(int id, int data, int time, int priority); // Construtor com parametros
         ~Process(); 
         
         void stop();  // interrrupcao do processo
@@ -39,13 +40,12 @@ class Process: public CPU{
         // Filas de processo prontos e pocessos bloqueados
         static std::list<Process*> Ready_queue;   // Fila de processos prontos
         static std::list<Process*> Blocked_queue; // Fila de processo bloqueados
-        CPU::Context *ctxtpointer; // ponteiro de contexto do processo
         
-    private:
+        Context *ctxtpointer; // ponteiro de contexto do processo
         Process *pointer; // ponteiro para o processo
         Process *running; // ponteiro para o processo que está com a cpu no momento
-
-        static int id_increment; // incrementador do processo 
+        
+    private:
         int _id; // identificador do processo
 
         // Time diference

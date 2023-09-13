@@ -1,23 +1,19 @@
 #include "definers/Process.h"
 
-int Process::id_increment = 0;
 std::list<Process*> Process::Ready_queue;
 std::list<Process*> Process::Blocked_queue;
-const std::list<Process*>* processList; // Change to pointer
 
 // construtor da classe de processo
 Process::Process(int id,int data, int time, int priority){
     // incrementa o id do processo
-    _id = id_increment++;
 
-    // cria um o contexto do processo
-    ctxtpointer = new CPU::Context();
-    
-    // cria o ponteiro do processo
-    pointer = new Process(id,data, time, priority);
+    // cria o contexto do processo
+    ctxtpointer = new Context();
 
     // obtém o tempo de criação do processo
     pointer->data_init = pointer->gettime();
+    
+    std::cout << "Tempo de criacao do processo: "<< pointer->gettime() << "\n";
     
     // Seta o estado do contexto e insere na fila de processos prontos
     pointer->state = Ready;
@@ -38,32 +34,28 @@ Process::Process(int id,int data, int time, int priority){
 
 // destrutor do processo
 Process::~Process(){
-    // deleta o pointeiro do contexto, bem com o ponteiro do processo, decrementa o contador de id's
-    delete ctxtpointer;
-    delete pointer;
+    // deleta o pointeiro do contexto, bem com o ponteiro do processo, decrementa o contador de id's 
+     if (ctxtpointer != nullptr) {
+        delete ctxtpointer;
+    }
     // se a fila de processos estiver vazia, deletar ela também
 }
 
 // a idéia é ter um método que retira o processo da fila de bloqueados e o insere na fila de prontos
 int Process::makeready(int id){
     
-    // Retira o processo da fila de processos bloqueados (Consertar isso, retirar o processo da fila de prontos definitivamente)
-    // pointer = FindProcessById(Blocked_queue,id);
-    for(Process* process: Blocked_queue){
-        if(process->getid() == id){
-            pointer = process;
-        };
-    };
-
-    // troca o estado do processo para pronto
-    pointer->state = Ready;
-    // insere o processo no fim da fila de processos
-    Ready_queue.push_back(pointer);
-
-    // incrementa o tempo de permanecia do processo na lista de processos prontos
-    pointer->setreadlistavgcounter();
-    
-    return 0;
+     // Procurar o processo com o ID especificado na lista de Blocked
+    for (auto it = Blocked_queue.begin(); it != Blocked_queue.end(); ++it) {
+        if ((*it)->getid() == id) {
+            Process* processToMove = *it;
+            Blocked_queue.erase(it); // Remove o processo da fila Blocked
+            processToMove->state = Ready; // Define o estado como Ready
+            Ready_queue.push_back(processToMove); // Adiciona à fila Ready
+            processToMove->setreadlistavgcounter(); // Incrementa o contador
+            return 0; // Indica sucesso
+        }
+    }
+    return -1; // Indica que o processo não foi encontrado
 }
 
 // Método para parar o processo especificado pelo id
@@ -87,7 +79,6 @@ void Process::stop(){
 // inicaliza o processo
 void Process::start(){
     // carrega o contexto
-
     this->ctxtpointer->load();
     
     // Retira da fila de prontos (Consertar isso, retirar o processo da fila de prontos definitivamente)
@@ -116,7 +107,9 @@ void Process::exec(){
         // primeiro: é necessário decerementar o tempo de execução do processo
         if(this->timeexec-- == 0){
             this->stop();
-        }else{};
+        }else{
+
+        };
     };
 }
 
@@ -126,13 +119,3 @@ void Process::endprocess(){
     // Chama o destrutor do Processo
     this->~Process();
 }
-
-// // método genérico para obter um processo das listas de prontos e lista de bloqueados
-// Process* FindProcessById(const std::list<Process*>& processList, int id) {
-//     for(Process* process: processList){
-//         if(process->getid() == id){
-//             return process;
-//         };
-//     }
-//     return nullptr;
-// }

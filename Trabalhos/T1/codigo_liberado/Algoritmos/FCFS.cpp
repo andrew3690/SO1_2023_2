@@ -1,15 +1,11 @@
 #include "definers/FCFS.h"
 
-FCFS_Scheduler::FCFS_Scheduler(int id, int data_int, int time, int priority): Process(id, data_int, time, priority){
-
+FCFS_Scheduler::FCFS_Scheduler(){
     // inserindo o processo na lista de processos do algoritmo
     // dado que o algoritmo não possui prioridades setadas, é só inserir o par na lista
     // ao escalonar é só obter o processo mais recente
     std::cout << "Iniciando o escalonador FCFS" << "\n";
-
-    //Cria o processo e o insere na fila de prontos
-    Process* process = new Process(id, data_int, time, priority);    
-    // dictList.push_back(std::make_pair(id,std::make_pair(data_int,time)));
+    escalonate();
 };
 
 void FCFS_Scheduler::escalonate(){
