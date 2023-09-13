@@ -3,7 +3,9 @@
 #include "definers/CPU.h"
 #include "definers/FCFS.h"
 #include "read_file.cc"
+
 #include <memory>
+#include <vector>
 
 int main (){
     // idéia:
@@ -31,6 +33,10 @@ int main (){
 
         int count = 0; // contador
         std::vector<std::tuple<int, int, int>> params = f.get_process_params(); // obtencao dos parametros dos processos
+        std::vector<std::shared_ptr<Process>> processes; // vetor de processos que mantem os ponteiros dos objetos dos processos
+        
+        // Instanciação do escalonador FCFS
+        FCFS_Scheduler fcfsScheduler(processes);
 
         for (const auto& tuple : params) {
             int creation_time = std::get<0>(tuple);
@@ -38,35 +44,38 @@ int main (){
             int priority = std::get<2>(tuple);
 
             count++;
-            
-            // std::cout << "Id: " << count << " Creation Time: " << creation_time << " Duration :" << duration << " Priority: " <<priority <<"\n";
-            Process(count,creation_time,duration,priority);
-        }
 
-        // estrutura de escolha do processo
-        if(input == 6){
-            break;
-        }
-        else {
-            switch(input){
+            // Cria novos processos e os insere na lista de processos compartilhados
+            auto process = std::make_shared<Process>(count, creation_time, duration, priority);
+            processes.push_back(process);
+
+            // Your scheduling algorithm code goes here
+            switch (input) {
                 case 1:
                     // FCFS
-                    // realiza uma iteração do loop para cada processo na lista de processo
-                    FCFS_Scheduler();
+                    fcfsScheduler.escalonate();
+                    break;
                 case 2:
                     // SJF
-                    // sjf_instance->schedule();
-                        break;
+                    // sjf_instance->schedule(process);
+                    break;
                 case 3:
                     // Prioridade sem preempção
-                        break;
+                    break;
                 case 4:
                     // Prioridade com preempção
-                        break;
+                    break;
                 case 5:
                     // Round Robin com quantum, de 2s sem prioridade
-                        break;
-            };
+                    break;
+                default:
+                    break;
+            }
+
+            // Break the loop if needed
+            if (input == 6) {
+                break;
+            }
         };
     };
 

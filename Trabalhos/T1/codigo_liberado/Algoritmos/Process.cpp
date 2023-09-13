@@ -11,14 +11,14 @@ Process::Process(int id,int data, int time, int priority){
     this->setdata(data);
     this->sepriority(priority);
 
-    std::cout << "Tempo de criacao do processo: "<< this->gettime() << "\n";
+    // std::cout << "Tempo de criacao do processo: "<< this->gettime() << "\n";
     
     // Seta o estado do contexto e insere na fila de processos prontos
     this->state = Ready;
 
     // Prints de debug
-    std::cout << "Processo Criado\n";
-    std::cout << "id: " << this->getid() << " time: " << this->gettime() << "prioridade: "<< this->getpriority() <<" \n";
+    // std::cout << "Processo Criado\n";
+    std::cout << "id: " << this->getid() << " time: " << this->gettime() << " prioridade: "<< this->getpriority() <<" \n";
     
     // Salva o contexto e insere o processo na fila de prontos, insere o processo no fim da fila de prontos 
     Ready_queue.push_back(this);
