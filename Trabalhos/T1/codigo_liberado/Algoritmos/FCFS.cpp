@@ -1,24 +1,21 @@
 #include "definers/FCFS.h"
 
-FCFS_Scheduler::FCFS_Scheduler(const std::vector<std::shared_ptr<Process>>& processes): processQueue(processes) {
+FCFS_Scheduler::FCFS_Scheduler() {
     std::cout << "Iniciando o escalonador FCFS" << "\n";
-    escalonate();
+    incrementtimer();
 }
 
-void FCFS_Scheduler::escalonate() {
-    if (!processQueue.empty()) {
-        // Get the first process from the queue
-        std::shared_ptr<Process> firstProcess = processQueue.front();
+void FCFS_Scheduler::escalonate(std::vector<Process*> processVector) {
+    std::cout << "Entrei no escalonador ! timer:" << gettimer() << "\n";
 
-        // Start processing the first process
-        firstProcess->start();
+    for (auto& process: processVector) {
+        std::cout << "Entrei no loop dos processos ! \n";
+        std::cout << "Id: " << process->getid() << "\n";
 
-        // Remove the first process from the queue
-        processQueue.erase(processQueue.begin());
-    } else {
-        // Chama a finalização do escalonador
-        std::cout << "Lista de prontos vazia ! \n";
+        process->start();
     }
+
+    std::cout << "Sai do loop dos processos ! Timer:" << gettimer() << "\n";
 }
 
 FCFS_Scheduler::~FCFS_Scheduler(){

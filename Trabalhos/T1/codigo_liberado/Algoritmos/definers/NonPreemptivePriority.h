@@ -8,7 +8,7 @@
 class NonPPriorityScheduler
 {
     public:
-        NonPPriorityScheduler(const std::vector<std::shared_ptr<Process>>& processes);
+        NonPPriorityScheduler();
         ~NonPPriorityScheduler();
 
         void escalonate();

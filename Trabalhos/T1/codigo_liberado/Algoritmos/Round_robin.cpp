@@ -1,6 +1,6 @@
 #include "definers/Round_robin.h"
 
-Round_robin::Round_robin(const std::vector<std::shared_ptr<Process>>& processes){
+Round_robin::Round_robin(){
     std::cout << "Chamada do escalonador Round-Robin \n";
 }
 

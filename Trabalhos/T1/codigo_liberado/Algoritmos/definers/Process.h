@@ -9,7 +9,7 @@ class Process: public CPU::Context{
     
     public:
         Process(){}; // Construtor vazio
-        Process(int id, int data, int time, int priority); // Construtor com parametros
+        Process(int data, int time, int priority); // Construtor com parametros
         ~Process(); 
         
         // metodos do processo
@@ -59,7 +59,8 @@ class Process: public CPU::Context{
     private:
 
         // Atributos do Processo
-        int _id; // identificador do processo
+        static int id_counter; // Static member variable to keep track of IDs
+        int _id;    // ID of the process
         int data_init; // data de inicio
         int data_end; // data de fim
         int duration; // duracao, variável que faz uma estimativa do tempo de exeução do processo 

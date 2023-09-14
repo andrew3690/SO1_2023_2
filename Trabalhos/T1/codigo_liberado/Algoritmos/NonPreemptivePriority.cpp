@@ -1,7 +1,7 @@
 #include "../definers/NonPreemptivePriority.h"
 
 
-NonPPriorityScheduler::NonPPriorityScheduler(const std::vector<std::shared_ptr<Process>>& processes) {
+NonPPriorityScheduler::NonPPriorityScheduler() {
 
 }; //construtor
 NonPPriorityScheduler::~NonPPriorityScheduler() {}; //destrutor

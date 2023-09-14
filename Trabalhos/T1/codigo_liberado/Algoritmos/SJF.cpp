@@ -1,7 +1,7 @@
 #include "definers/SJF.h"
 
 
-SJF_Scheduler::SJF_Scheduler(const std::vector<std::shared_ptr<Process>>& processes){
+SJF_Scheduler::SJF_Scheduler(){
     std::cout << "Inciando o escalonador SJF";
 } //constructor
 

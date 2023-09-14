@@ -26,15 +26,14 @@ int main (){
     int input; // entrada que define qual escalonador utilizar
     
     CPU::Context* cpu; // criacao do contexto da cpu
-    int count = 0; // contador
     std::vector<std::tuple<int, int, int>> params = f.get_process_params(); // obtencao dos parametros dos processos
-    std::vector<std::shared_ptr<Process>> processes; // vetor de processos que mantem os ponteiros dos objetos dos processos
-        
+    std::vector<Process*> processVector; // vetor de processos que mantem os ponteiros dos objetos dos processos
+    
     // Instanciação dos escalonadores para cada lista de processos. 
-    FCFS_Scheduler fcfsScheduler(processes);
-    SJF_Scheduler sjfScheduler(processes);
-    NonPPriorityScheduler npremptive(processes);
-    Round_robin round_robin(processes);
+    FCFS_Scheduler fcfsScheduler;
+    SJF_Scheduler sjfScheduler;
+    NonPPriorityScheduler npremptive;
+    Round_robin round_robin;
     
     while(true){
         // Carregar os processo na fila de bloqueados da CPU
@@ -46,15 +45,6 @@ int main (){
 
 
         for (const auto& tuple : params) {
-            int creation_time = std::get<0>(tuple);
-            int duration = std::get<1>(tuple);
-            int priority = std::get<2>(tuple);
-
-            count++;
-
-            // Cria novos processos e os insere na lista de processos compartilhados
-            auto process = std::make_shared<Process>(count, creation_time, duration, priority);
-            processes.push_back(process);
 
             // Se o usuário opta por finalizar os escalonadores
             if (input == 6) {
@@ -62,12 +52,20 @@ int main (){
             } 
             else {
 
+                // criacao da lista de processos compartilhados
+                int creation_time = std::get<0>(tuple);
+                int duration = std::get<1>(tuple);
+                int priority = std::get<2>(tuple);
+
+                // Cria novos processos e os insere na lista de processos compartilhados
+                Process* process = new Process(creation_time, duration, priority);
+                processVector.push_back(process);
 
                 // Os algoritmos de escalonamento entram aqui
                 switch (input) {
                     case 1:
                         // FCFS
-                        fcfsScheduler.escalonate();
+                        fcfsScheduler.escalonate(processVector);
                         break;
                     case 2:
                         // SJF
@@ -89,10 +87,6 @@ int main (){
                         break;
                 }
             };
-        };
-    
-        if (input == 6){
-            break;
-        }   
+        }; 
     };
 }

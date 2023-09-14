@@ -10,7 +10,7 @@ using namespace std;
 
 class SJF_Scheduler{
     public:
-        SJF_Scheduler(const std::vector<std::shared_ptr<Process>>& processes);
+        SJF_Scheduler();
         ~SJF_Scheduler();
         void add_process(Process *process1);
 

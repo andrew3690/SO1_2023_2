@@ -2,10 +2,12 @@
 
 std::list<Process*> Process::Ready_queue;
 std::list<Process*> Process::Blocked_queue;
+int Process::id_counter = 0;
 
 // construtor da classe de processo
-Process::Process(int id,int data, int time, int priority){
-    
+Process::Process(int data, int time, int priority){
+    // incrementa o id do contador de processos
+    _id = ++id_counter;
     // obtém o tempo de criação do processo
     this->settime(time);
     this->setdata(data);
@@ -72,7 +74,7 @@ void Process::stop(){
         this->state = Blocked;
         
         // realiza troca de contexto aqui para a cpu
-        cpu->switch_context(this->pointer,cpu->pointer);
+        // cpu->switch_context(this->pointer,cpu->pointer);
 
         // incrementa contador de trocas de contexto do processo
         this->setswitchcontextcounter();
@@ -83,6 +85,7 @@ void Process::stop(){
 // inicaliza o processo
 void Process::start(){
     // Retira da fila de prontos
+    std::cout << "Vou retirar da fila de prontos" << "\n";
     for (auto it = Ready_queue.begin(); it != Ready_queue.end(); ++it) {
         if ((*it)->getid() == this->getid()) {
             running = *it;
@@ -90,9 +93,12 @@ void Process::start(){
             break;
         }
     }
+    std::cout << "Retirei o processo da lista de prontos " << running->getid() << "\n";
 
     // realiza a troca do contexto da cpu para o contexto atual
-    cpu->switch_context(cpu->pointer,running->pointer);
+    // cpu->switch_context(cpu->pointer,running->pointer);
+
+    std::cout << "Troca de contexto realizada pelo processo " << running->getid() << "\n";
 
     // incrementa a contagem de troca de processos
     running->setswitchcontextcounter();
@@ -111,8 +117,8 @@ void Process::exec(){
     // enquanto houver tempo para execução do processo e este estiver no estado Running....
     while(this->state == Running && this->getduration() != 0){
         // primeiro decrementa o tempo de existencia do processo....
+        std::cout <<"Duracao atual do processo: " << this->getduration() <<"\n";
         this->dectime();
-        
         // se o tempo de duracao do processo tiver acabado...
         if(this->getduration() == 0){
             // ... chama o destrutor do processo
@@ -121,6 +127,7 @@ void Process::exec(){
 
         // segundo: é necessário decrementar o tempo de existencia do processo
         this->setTurnarroundTimer();
+        std::cout <<"Duracao atual do processo: " << this->getduration() <<"\n";
     };
 }
 

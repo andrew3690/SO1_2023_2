@@ -9,7 +9,7 @@
 class Round_robin
 {
     public:
-        Round_robin(const std::vector<std::shared_ptr<Process>>& processes);
+        Round_robin();
         ~Round_robin();
 
         void escalonate();
