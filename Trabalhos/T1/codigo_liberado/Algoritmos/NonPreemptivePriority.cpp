@@ -1,10 +1,14 @@
 #include "../definers/NonPreemptivePriority.h"
 
 
-NonPPriorityScheduler::NonPPriorityScheduler() {}; //construtor
+NonPPriorityScheduler::NonPPriorityScheduler(const std::vector<std::shared_ptr<Process>>& processes) {
+
+}; //construtor
 NonPPriorityScheduler::~NonPPriorityScheduler() {}; //destrutor
 
-void NonPPriorityScheduler::schedule() {};
+void NonPPriorityScheduler::escalonate() {
+    
+};
 
 void NonPPriorityScheduler::sort()
 {

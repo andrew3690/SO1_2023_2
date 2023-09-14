@@ -24,7 +24,17 @@ int main (){
     f.read_file(); // leitura dos dados do arquivo
 
     int input; // entrada que define qual escalonador utilizar
+    
     CPU::Context* cpu; // criacao do contexto da cpu
+    int count = 0; // contador
+    std::vector<std::tuple<int, int, int>> params = f.get_process_params(); // obtencao dos parametros dos processos
+    std::vector<std::shared_ptr<Process>> processes; // vetor de processos que mantem os ponteiros dos objetos dos processos
+        
+    // Instanciação dos escalonadores para cada lista de processos. 
+    FCFS_Scheduler fcfsScheduler(processes);
+    SJF_Scheduler sjfScheduler(processes);
+    NonPPriorityScheduler npremptive(processes);
+    Round_robin round_robin(processes);
     
     while(true){
         // Carregar os processo na fila de bloqueados da CPU
@@ -34,15 +44,6 @@ int main (){
         std::cout << "5- Round Robin com quantum, de 2s sem prioridade, 6-Finalizar \n";
         std::cin >> input;
 
-        int count = 0; // contador
-        std::vector<std::tuple<int, int, int>> params = f.get_process_params(); // obtencao dos parametros dos processos
-        std::vector<std::shared_ptr<Process>> processes; // vetor de processos que mantem os ponteiros dos objetos dos processos
-        
-        // Instanciação dos escalonadores para cada lista de processos. 
-        FCFS_Scheduler fcfsScheduler(processes);
-        SJF_Scheduler sjfScheduler(processes);
-        NonPPriorityScheduler npremptive(processes);
-        Round_robin round_robin(processes);
 
         for (const auto& tuple : params) {
             int creation_time = std::get<0>(tuple);
@@ -55,35 +56,43 @@ int main (){
             auto process = std::make_shared<Process>(count, creation_time, duration, priority);
             processes.push_back(process);
 
-            // Your scheduling algorithm code goes here
-            switch (input) {
-                case 1:
-                    // FCFS
-                    fcfsScheduler.escalonate();
-                    break;
-                case 2:
-                    // SJF
-                    sjfScheduler.escalonate();
-                    break;
-                case 3:
-                    npremptive.escalonate();
-                    break;
-                case 4:
-                    npremptive.escalonate();
-                    break;
-                case 5:
-                    round_robin.escalonate();
-                    break;
-                default:
-                    break;
-            }
-
-            // Break the loop if needed
+            // Se o usuário opta por finalizar os escalonadores
             if (input == 6) {
                 break;
-            }
-        };
-    };
+            } 
+            else {
 
-    delete cpu;
-};
+
+                // Os algoritmos de escalonamento entram aqui
+                switch (input) {
+                    case 1:
+                        // FCFS
+                        fcfsScheduler.escalonate();
+                        break;
+                    case 2:
+                        // SJF
+                        sjfScheduler.escalonate();
+                        break;
+                    case 3:
+                        // Non-preemptive com preempção 
+                        npremptive.escalonate();
+                        break;
+                    case 4:
+                        // Non-preempotive sem preempção
+                        npremptive.escalonate();
+                        break;
+                    case 5:
+                        // Round robin com quantum 2
+                        round_robin.escalonate();
+                        break;
+                    default:
+                        break;
+                }
+            };
+        };
+    
+        if (input == 6){
+            break;
+        }   
+    };
+}

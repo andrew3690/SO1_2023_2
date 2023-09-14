@@ -2,6 +2,7 @@
 #define ROUND_ROBIN
 
 #include <vector>
+#include <memory>
 #include "Process.h"
 
 

@@ -1,18 +1,20 @@
 #include "definers/SJF.h"
 
 
-ShortestJobFirst_Scheduler::ShortestJobFirst_Scheduler(){} //constructor
+SJF_Scheduler::SJF_Scheduler(const std::vector<std::shared_ptr<Process>>& processes){
+    std::cout << "Inciando o escalonador SJF";
+} //constructor
 
-ShortestJobFirst_Scheduler::~ShortestJobFirst_Scheduler(){} //destructor
+SJF_Scheduler::~SJF_Scheduler(){} //destructor
 
-void ShortestJobFirst_Scheduler::add_process(Process *process1)
+void SJF_Scheduler::add_process(Process *process1)
 {
     process_list.push_back(*process1);
-    this->sort(); // ordena o vetor para duração do processo em ordem crescente
+    // this->sort(); // ordena o vetor para duração do processo em ordem crescente
     
 }
 
-void ShortestJobFirst_Scheduler::schedule()
+void SJF_Scheduler::escalonate()
 {
     Process process = process_list[0]; // pega o primeiro elemento do array, com tempo de ex menor
     int counter = 0;
@@ -26,7 +28,7 @@ void ShortestJobFirst_Scheduler::schedule()
 
 }
 
-void ShortestJobFirst_Scheduler::sort() 
+void SJF_Scheduler::sort() 
 {
     // int size = process_list.size();
     // for (int i = 1; i < size; i++) {

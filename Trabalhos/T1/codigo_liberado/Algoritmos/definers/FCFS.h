@@ -15,6 +15,7 @@ class FCFS_Scheduler {
         ~FCFS_Scheduler();
 
     private:
+        int timer;
         std::vector<std::shared_ptr<Process>> processQueue;
 };
 
