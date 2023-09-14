@@ -3,6 +3,9 @@
 #include "definers/CPU.h"
 #include "definers/FCFS.h"
 #include "read_file.cc"
+#include "definers/SJF.h"
+#include "definers/NonPreemptivePriority.h"
+#include "definers/Round_robin.h"
 
 #include <memory>
 #include <vector>
@@ -17,7 +20,7 @@ int main (){
     //  Round Robin com quantum, de 2s sem prioridade: 5
     //  Finalizar: 6
     
-    File f; // Instanciando objeto de arquivp
+    File f; // Instanciando objeto de arquivo
     f.read_file(); // leitura dos dados do arquivo
 
     int input; // entrada que define qual escalonador utilizar
@@ -35,8 +38,11 @@ int main (){
         std::vector<std::tuple<int, int, int>> params = f.get_process_params(); // obtencao dos parametros dos processos
         std::vector<std::shared_ptr<Process>> processes; // vetor de processos que mantem os ponteiros dos objetos dos processos
         
-        // Instanciação do escalonador FCFS
+        // Instanciação dos escalonadores para cada lista de processos. 
         FCFS_Scheduler fcfsScheduler(processes);
+        SJF_Scheduler sjfScheduler(processes);
+        NonPPriorityScheduler npremptive(processes);
+        Round_robin round_robin(processes);
 
         for (const auto& tuple : params) {
             int creation_time = std::get<0>(tuple);
@@ -57,16 +63,16 @@ int main (){
                     break;
                 case 2:
                     // SJF
-                    // sjf_instance->schedule(process);
+                    sjfScheduler.escalonate();
                     break;
                 case 3:
-                    // Prioridade sem preempção
+                    npremptive.escalonate();
                     break;
                 case 4:
-                    // Prioridade com preempção
+                    npremptive.escalonate();
                     break;
                 case 5:
-                    // Round Robin com quantum, de 2s sem prioridade
+                    round_robin.escalonate();
                     break;
                 default:
                     break;

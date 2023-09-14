@@ -2,21 +2,18 @@
 #define SJF_SCHEDULER_H
 
 #include <vector>
+#include <memory>
 #include "../definers/Process.h"
 
 using namespace std;
 
 
-class ShortestJobFirst_Scheduler
-{
+class SJF_Scheduler{
     public:
-        ShortestJobFirst_Scheduler();
-        ~ShortestJobFirst_Scheduler();
+        SJF_Scheduler(const std::vector<std::shared_ptr<Process>>& processes);
+        ~SJF_Scheduler();
 
-
-        void add_process(Process *process_ready);
-        void schedule();
-        void sort();
+        void escalonate(); // execuçao do escalonamento
 
     private:
         vector<Process> process_list; // lista de processos
