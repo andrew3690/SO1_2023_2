@@ -3,6 +3,7 @@
 
 #include "CPU.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Process: public CPU::Context{
@@ -49,12 +50,19 @@ class Process: public CPU::Context{
         int getid() {return _id;};
 
         // Filas de processo prontos e pocessos bloqueados
-        static std::list<Process*> Ready_queue;   // Fila de processos prontos
-        static std::list<Process*> Blocked_queue; // Fila de processo bloqueados
+        static std::vector<Process*> Ready_queue;   // Fila de processos prontos
+        static std::vector<Process*> Blocked_queue; // Fila de processo bloqueados
         
         CPU *cpu; // ponteiro para a cpu
         Context *ctxtpointer; // ponteiro de contexto do processo
         Process *running; // ponteiro para o processo que está com a cpu no momento
+
+        enum State // Estado atual
+        {
+            Ready,
+            Blocked,
+            Running
+        } state;
         
     private:
 
@@ -67,12 +75,6 @@ class Process: public CPU::Context{
         int timeexec; // tempo de execucao, variável que acompanha a exeucção do processo
         int priority_; // prioridade do processo
 
-        enum State // Estado atual
-        {
-            Ready,
-            Blocked,
-            Running
-        } state;
 
         // Variáveis do trabalho
         int tunarround_time = 0;

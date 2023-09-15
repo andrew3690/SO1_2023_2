@@ -1,8 +1,8 @@
 #include "definers/Process.h"
 #include "unistd.h"
 
-std::list<Process*> Process::Ready_queue;
-std::list<Process*> Process::Blocked_queue;
+std::vector<Process*> Process::Ready_queue;
+std::vector<Process*> Process::Blocked_queue;
 int Process::id_counter = 0;
 
 // construtor da classe de processo
@@ -24,7 +24,7 @@ Process::Process(int data, int time, int priority){
     std::cout << "id: " << this->getid() << " time: " << this->gettime() << " prioridade: "<< this->getpriority() <<" \n";
     
     // Salva o contexto e insere o processo na fila de prontos, insere o processo no fim da fila de prontos 
-    Ready_queue.push_back(this);
+    Blocked_queue.push_back(this);
     
     // incrementa o tempo de permaencia do processo na lista de processos prontos
     this->setreadlistavgcounter();
@@ -111,26 +111,28 @@ void Process::start(){
     running->setTurnarroundTimer();
 
     // realiza a execução do processo
-    running->exec();
+    // running->exec();
 }
 
 void Process::exec(){
     // enquanto houver tempo para execução do processo e este estiver no estado Running....
-    while(this->state == Running && this->getduration() != 0){
-        sleep(1);
-        // primeiro decrementa o tempo de existencia do processo....
-        std::cout <<"Duracao atual do processo: " << this->getduration() <<"\n";
-        this->dectime();
-        // se o tempo de duracao do processo tiver acabado...
-        if(this->getduration() == 0){
-            // ... chama o destrutor do processo
-            this->endprocess();
-        }
+    // while(this->state == Running && this->getduration() != 0){
+    //     sleep(1);
+    //     // primeiro decrementa o tempo de existencia do processo....
+    //     std::cout <<"Duracao atual do processo: " << this->getduration() <<"\n";
+    //     this->dectime();
+    //     // se o tempo de duracao do processo tiver acabado...
+    //     if(this->getduration() == 0){
+    //         // ... chama o destrutor do processo
+    //         this->endprocess();
+    //     }
 
-        // segundo: é necessário decrementar o tempo de existencia do processo
-        this->setTurnarroundTimer();
-        std::cout <<"Duracao atual do processo: " << this->getduration() <<"\n";
-    };
+    //     // segundo: é necessário decrementar o tempo de existencia do processo
+    //     this->setTurnarroundTimer();
+    //     std::cout <<"Duracao atual do processo: " << this->getduration() <<"\n";
+    // };
+    //this->dectime();
+    //this->setTurnarroundTimer();
 }
 
 void Process::endprocess(){

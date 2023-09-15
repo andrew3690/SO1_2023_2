@@ -14,10 +14,12 @@ class SJF_Scheduler{
         ~SJF_Scheduler();
 
         void escalonate(std::vector<Process*> processVector); // execuçao do escalonamento
-        void sort();
+        vector<Process*> sort(vector<Process*> process_list);
+        void exec(Process* process, int time);
         
     private:
         vector<Process*> process_list; // lista de processos
+        int clock_counter = 0;
 
 };
 
