@@ -1,4 +1,5 @@
 #include "definers/SJF.h"
+#include "unistd.h"
 
 
 SJF_Scheduler::SJF_Scheduler(){
@@ -7,38 +8,28 @@ SJF_Scheduler::SJF_Scheduler(){
 
 SJF_Scheduler::~SJF_Scheduler(){} //destructor
 
-void SJF_Scheduler::add_process(Process *process1)
-{
-    process_list.push_back(*process1);
-    // this->sort(); // ordena o vetor para duração do processo em ordem crescente
-    
-}
 
-void SJF_Scheduler::escalonate()
+void SJF_Scheduler::escalonate(std::vector<Process*> processVector)
 {
-    Process process = process_list[0]; // pega o primeiro elemento do array, com tempo de ex menor
-    int counter = 0;
-    process.start();
-    while (process_list.size() > 0) {
-        // sleep(1);
-        std::cout << "executou no instante " << counter << "-" << counter+1 << std::endl;
-        counter++;
+    process_list = processVector;
+    sort();
+    for (auto& process: process_list) {
+        process->start();
+        //std::cout << "executou no instante " << counter << "-" << counter+1 << " " << process->getid() << std::endl;
     }
-    
-
 }
 
-void SJF_Scheduler::sort() 
+void SJF_Scheduler::sort()
 {
-    // int size = process_list.size();
-    // for (int i = 1; i < size; i++) {
-    //     Process key = process_list[i];
-    //     int j = i-1;
+    int size = process_list.size();
+    for (int step = 1; step < size; step++) {
+        Process* key = process_list[step];
+        int j = step - 1;
 
-    //     while (key.getDuration() < process_list[j].getDuration() && j >= 0) {
-    //         process_list[j + 1] = process_list[j];
-    //         j--;
-    //     }
-    //     process_list[j+1] = key;
-    // }
-}
+        while (j >= 0 && key->getduration() < process_list.at(j)->getduration()) {
+            process_list[j + 1] = process_list[j];
+            --j;
+        };
+        process_list[j + 1] = key;
+    }
+};

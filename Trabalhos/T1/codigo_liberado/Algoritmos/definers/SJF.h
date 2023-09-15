@@ -12,13 +12,12 @@ class SJF_Scheduler{
     public:
         SJF_Scheduler();
         ~SJF_Scheduler();
-        void add_process(Process *process1);
 
-        void escalonate(); // execuçao do escalonamento
+        void escalonate(std::vector<Process*> processVector); // execuçao do escalonamento
         void sort();
         
     private:
-        vector<Process> process_list; // lista de processos
+        vector<Process*> process_list; // lista de processos
 
 };
 

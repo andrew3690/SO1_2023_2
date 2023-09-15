@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Idefiners
+CXXFLAGS = -std=c++11 -Idefiners -g
 
 SRCS = $(wildcard *.cpp)   # This will include all .cpp files in the current directory
 HDRS = $(wildcard definers/*.h)   # This will include all .h files in the 'definers' directory

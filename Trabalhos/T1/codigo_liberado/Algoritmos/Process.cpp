@@ -1,4 +1,5 @@
 #include "definers/Process.h"
+#include "unistd.h"
 
 std::list<Process*> Process::Ready_queue;
 std::list<Process*> Process::Blocked_queue;
@@ -116,6 +117,7 @@ void Process::start(){
 void Process::exec(){
     // enquanto houver tempo para execução do processo e este estiver no estado Running....
     while(this->state == Running && this->getduration() != 0){
+        sleep(1);
         // primeiro decrementa o tempo de existencia do processo....
         std::cout <<"Duracao atual do processo: " << this->getduration() <<"\n";
         this->dectime();

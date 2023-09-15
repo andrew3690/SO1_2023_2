@@ -44,13 +44,14 @@ int main (){
         std::cin >> input;
 
 
-        for (const auto& tuple : params) {
+        
 
-            // Se o usuário opta por finalizar os escalonadores
-            if (input == 6) {
-                break;
-            } 
-            else {
+        // Se o usuário opta por finalizar os escalonadores
+        if (input == 6) {
+            break;
+        } 
+        else {
+            for (const auto& tuple : params) {
 
                 // criacao da lista de processos compartilhados
                 int creation_time = std::get<0>(tuple);
@@ -60,33 +61,33 @@ int main (){
                 // Cria novos processos e os insere na lista de processos compartilhados
                 Process* process = new Process(creation_time, duration, priority);
                 processVector.push_back(process);
+            }
 
-                // Os algoritmos de escalonamento entram aqui
-                switch (input) {
-                    case 1:
-                        // FCFS
-                        fcfsScheduler.escalonate(processVector);
-                        break;
-                    case 2:
-                        // SJF
-                        sjfScheduler.escalonate();
-                        break;
-                    case 3:
-                        // Non-preemptive com preempção 
-                        npremptive.escalonate();
-                        break;
-                    case 4:
-                        // Non-preempotive sem preempção
-                        npremptive.escalonate();
-                        break;
-                    case 5:
-                        // Round robin com quantum 2
-                        round_robin.escalonate();
-                        break;
-                    default:
-                        break;
-                }
-            };
-        }; 
+            // Os algoritmos de escalonamento entram aqui
+            switch (input) {
+                case 1:
+                    // FCFS
+                    fcfsScheduler.escalonate(processVector);
+                    break;
+                case 2:
+                    // SJF
+                    sjfScheduler.escalonate(processVector);
+                    break;
+                case 3:
+                    // Non-preemptive com preempção 
+                    npremptive.escalonate();
+                    break;
+                case 4:
+                    // Non-preempotive sem preempção
+                    npremptive.escalonate();
+                    break;
+                case 5:
+                    // Round robin com quantum 2
+                    round_robin.escalonate();
+                    break;
+                default:
+                    break;
+            }
+        };
     };
 }
