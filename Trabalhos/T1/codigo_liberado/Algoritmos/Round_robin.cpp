@@ -14,7 +14,7 @@ void Round_robin::escalonate(){
         for (int i = 0; i < Process::Blocked_queue.size(); i++) {
             Process* blocked_process = Process::Blocked_queue.front();
             if (blocked_process->gettime() == clock_counter) {
-                blocked_process->makeready(blocked_process->getid()); // coloca processo na lista de pronto
+                blocked_process->makeready(blocked_process->getid(), clock_counter); // coloca processo na lista de pronto
             }
         }
         Process* process;
@@ -25,7 +25,7 @@ void Round_robin::escalonate(){
             running_process = process;
         }
 
-        if (process->getduration() > 0 and process->getquantum() < quantum) {
+        if (process->getduration() > 0 && process->getquantum() < quantum) {
             exec(process, clock_counter); // executa o processo por 1 unidade de tempo
             process->increasequantum(); // incrementa o quantum do processo
         }
@@ -33,7 +33,7 @@ void Round_robin::escalonate(){
         if (process->getduration() == 0) {
             // processo atual terminou suas instruções
             process->stop();
-            process->endprocess();
+            process->endprocess(clock_counter);
             running_process = nullptr;
         } else if (process->getquantum() == quantum) {
             // processo ja executou por 2 segundos e deve ser preemptado

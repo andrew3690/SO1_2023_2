@@ -24,7 +24,7 @@ void SJF_Scheduler::escalonate(std::vector<Process*> processVector) // lista de 
         for (int i = 0; i < Process::Blocked_queue.size(); i++) {
             Process* blocked_process = Process::Blocked_queue.front();
             if (blocked_process->gettime() == clock_counter) {
-                blocked_process->makeready(blocked_process->getid()); // coloca processo na lista de pronto
+                blocked_process->makeready(blocked_process->getid(), clock_counter); // coloca processo na lista de pronto
             }
         }
         Process::Ready_queue = sort(Process::Ready_queue); // ordena
@@ -43,7 +43,7 @@ void SJF_Scheduler::escalonate(std::vector<Process*> processVector) // lista de 
 
         if (process->getduration() == 0) {
             process->stop();
-            process->endprocess();
+            process->endprocess(clock_counter);
             running_process = nullptr;
         }
         clock_counter++;

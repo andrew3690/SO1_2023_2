@@ -27,8 +27,7 @@ Process::Process(int data, int time, int priority){
     Blocked_queue.push_back(this);
     
     // incrementa o tempo de permaencia do processo na lista de processos prontos
-    this->setreadlistavgcounter();
-    this->setTurnarroundTimer();
+    //this->setTurnarroundTimer();
 }
 
 // destrutor do processo
@@ -41,15 +40,15 @@ Process::~Process(){
 }
 
 // a idéia é ter um método que retira o processo da fila de bloqueados e o insere na fila de prontos
-int Process::makeready(int id){
+int Process::makeready(int id, int time){
     // Procurar o processo com o ID especificado na lista de Blocked
     for (auto it = Blocked_queue.begin(); it != Blocked_queue.end(); ++it) {
         if ((*it)->getid() == id) {
             Process* processToMove = *it;
-            
+
             // Remove o processo da fila Blocked
             Blocked_queue.erase(it);
-            
+
             // Define o estado como Ready
             processToMove->state = Ready;
             
@@ -58,7 +57,7 @@ int Process::makeready(int id){
             
             // Incrementa os contadores
             processToMove->setreadlistavgcounter();
-            processToMove->setTurnarroundTimer();
+            processToMove->setTurnarroundTimer(time);
             
             // Indica sucesso
             return 0;
@@ -79,13 +78,13 @@ void Process::stop(){
     if(this->state == Running){
         // Troca o estado do processo para bloqueado
         this->state = Blocked;
-        
+
         // realiza troca de contexto aqui para a cpu
         // cpu->switch_context(this->pointer,cpu->pointer);
 
         // incrementa contador de trocas de contexto do processo
         this->setswitchcontextcounter();
-        this->setTurnarroundTimer();
+        //this->setTurnarroundTimer();
     }
 }
 
@@ -114,35 +113,14 @@ void Process::start(){
     running->state = Running;
 
     // incrementa o tempo de existencia do processo
-    running->setTurnarroundTimer();
+   // running->setTurnarroundTimer(time);
 
-    // realiza a execução do processo
-    // running->exec();
 }
 
-//void Process::exec(){
-    // enquanto houver tempo para execução do processo e este estiver no estado Running....
-    // while(this->state == Running && this->getduration() != 0){
-    //     sleep(1);
-    //     // primeiro decrementa o tempo de existencia do processo....
-    //     std::cout <<"Duracao atual do processo: " << this->getduration() <<"\n";
-    //     this->dectime();
-    //     // se o tempo de duracao do processo tiver acabado...
-    //     if(this->getduration() == 0){
-    //         // ... chama o destrutor do processo
-    //         this->endprocess();
-    //     }
-
-    //     // segundo: é necessário decrementar o tempo de existencia do processo
-    //     this->setTurnarroundTimer();
-    //     std::cout <<"Duracao atual do processo: " << this->getduration() <<"\n";
-    // };
-    //this->dectime();
-    //this->setTurnarroundTimer();
-//}
-
-void Process::endprocess(){
+void Process::endprocess(int time){
     // Printa os dados requisitados
+    int temp = time - this->getTurnarroundTime();
+    this->setTurnarroundTimer(temp);
     std::cout << "Turnarround Time: " << this->getTurnarroundTime() << " Tempo médio  de espera: "<< this->getreadlistavgcounter() <<" Total de trocas de contexto: " << this->getswitchcontextcounter() <<" \n";
     // Chama o destrutor do Processo
     delete this;

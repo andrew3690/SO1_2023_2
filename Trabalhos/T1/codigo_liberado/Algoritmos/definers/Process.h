@@ -16,7 +16,7 @@ class Process: public CPU::Context{
         // metodos do processo
         void stop();  // interrrupcao do processo
         void start(); // incia ou volta a execucao do processo
-        int makeready(int id); // faz o processo sair da fila de bloqueados para a fila de prontos
+        int makeready(int id, int time); // faz o processo sair da fila de bloqueados para a fila de prontos
         void preempt(); // faz o processo em execução retornar para a fila de pronto
         //void exec(); // método para execução do processo
         
@@ -24,10 +24,10 @@ class Process: public CPU::Context{
         // void printdiagram();
         
         // Finaliza o processo:
-        void endprocess();
+        void endprocess(int time);
 
         // setters das variáveis do trabalho
-        int setTurnarroundTimer(){return tunarround_time++;};
+        int setTurnarroundTimer(int time){return tunarround_time = time;};
         int setswitchcontextcounter(){return switch_context_count++;};
         int setreadlistavgcounter(){return read_list_avg_time++;};
         void increasequantum() {current_quantum++;};
