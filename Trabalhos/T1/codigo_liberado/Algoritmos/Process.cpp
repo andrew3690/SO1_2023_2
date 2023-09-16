@@ -70,6 +70,7 @@ int Process::makeready(int id){
 void Process::preempt()
 {
     Ready_queue.push_back(this);
+    this->state = Ready;
 }
 
 // Método para parar o processo especificado pelo id

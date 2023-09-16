@@ -48,22 +48,6 @@ void SJF_Scheduler::escalonate(std::vector<Process*> processVector) // lista de 
         }
         clock_counter++;
     }
-    // process_list = processVector;
-    // sort();
-    // int counter = 0;
-    // Process* process = process_list.front();
-    // while (process_list.size() > 0 && process->getduration() > 0) {
-    //     sleep(1);
-    //     process->exec();
-    //     std::cout << "executou no instante " << counter << "-" << counter+1 << " " << process->getid() << std::endl;
-    //     if (process->getduration() == 0) {
-    //         process->endprocess();
-    //         process_list.erase(process_list.begin());
-    //         std::cout << "terminou " <<  "\n";
-    //         process = process_list.front();
-    //     }
-    //     counter++;
-    // }
 }
 
 vector<Process*> SJF_Scheduler::sort(vector<Process*> process_list)

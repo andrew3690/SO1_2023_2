@@ -4,7 +4,7 @@
 #include "definers/FCFS.h"
 #include "read_file.cc"
 #include "definers/SJF.h"
-#include "definers/NonPreemptivePriority.h"
+#include "definers/PriorityScheduler.h"
 #include "definers/Round_robin.h"
 
 #include <memory>
@@ -32,7 +32,7 @@ int main (){
     // Instanciação dos escalonadores para cada lista de processos. 
     FCFS_Scheduler fcfsScheduler;
     SJF_Scheduler sjfScheduler;
-    NonPriorityScheduler npremptive;
+    PriorityScheduler priority;
     Round_robin round_robin;
     
     while(true){
@@ -74,12 +74,12 @@ int main (){
                     sjfScheduler.escalonate(processVector);
                     break;
                 case 3:
-                    // Non-preemptive com preempção 
-                    npremptive.escalonate();
+                    // prioridade sem preempção 
+                    priority.escalonate(processVector, 1);
                     break;
                 case 4:
-                    // Non-preempotive sem preempção
-                    npremptive.escalonate();
+                    // prioridade com preempção
+                    priority.escalonate(processVector, 0);
                     break;
                 case 5:
                     // Round robin com quantum 2

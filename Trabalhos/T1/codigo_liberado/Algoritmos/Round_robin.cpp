@@ -9,7 +9,7 @@ Round_robin::~Round_robin(){}
 void Round_robin::escalonate(){
     std::cout << "Iniciando o escalonamento \n";
     while (Process::Blocked_queue.size() > 0 || Process::Ready_queue.size() > 0 || running_process != nullptr) {
-        sleep(1);
+        sleep(1); // unidade de tempo (1 segundo)
 
         for (int i = 0; i < Process::Blocked_queue.size(); i++) {
             Process* blocked_process = Process::Blocked_queue.front();
@@ -26,8 +26,8 @@ void Round_robin::escalonate(){
         }
 
         if (process->getduration() > 0 and process->getquantum() < quantum) {
-            exec(process, clock_counter);
-            process->increasequantum();
+            exec(process, clock_counter); // executa o processo por 1 unidade de tempo
+            process->increasequantum(); // incrementa o quantum do processo
         }
 
         if (process->getduration() == 0) {
@@ -41,6 +41,6 @@ void Round_robin::escalonate(){
             process->resetquantum();
             running_process = nullptr;
         }
-        clock_counter++;
+        clock_counter++; // incrementa o relógio
     }
 }
