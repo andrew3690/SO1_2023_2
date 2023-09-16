@@ -29,6 +29,7 @@ class Process: public CPU::Context{
         int setTurnarroundTimer(){return tunarround_time++;};
         int setswitchcontextcounter(){return switch_context_count++;};
         int setreadlistavgcounter(){return read_list_avg_time++;};
+        void increasequantum() {current_quantum++;};
 
         // getters das variaveis do trabalho 
         int getTurnarroundTime(){return tunarround_time;};
@@ -48,6 +49,7 @@ class Process: public CPU::Context{
         int gettime(){return data_init;};
         int getpriority(){return priority_;};
         int getid() {return _id;};
+        int getquantum() {return current_quantum;};
 
         // Filas de processo prontos e pocessos bloqueados
         static std::vector<Process*> Ready_queue;   // Fila de processos prontos
@@ -74,6 +76,7 @@ class Process: public CPU::Context{
         int duration; // duracao, variável que faz uma estimativa do tempo de exeução do processo 
         int timeexec; // tempo de execucao, variável que acompanha a exeucção do processo
         int priority_; // prioridade do processo
+        int current_quantum = 0;
 
 
         // Variáveis do trabalho

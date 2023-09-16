@@ -19,6 +19,7 @@ class Round_robin: private Generic_Scheduler
 
     private:
         vector<Process> process_list; // FIFO para o algoritmo
+        const int quantum = 2; // valor do quantum em segundos
 };
 
 #endif
