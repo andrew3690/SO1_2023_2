@@ -5,8 +5,9 @@
 #include <vector>
 #include <memory>
 #include "../definers/Process.h"
+#include "GenericScheduler.h"
 
-class FCFS_Scheduler: public Process {
+class FCFS_Scheduler: public Process, private Generic_Scheduler {
     public:
 
         FCFS_Scheduler();

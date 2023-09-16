@@ -17,7 +17,7 @@ class Process: public CPU::Context{
         void stop();  // interrrupcao do processo
         void start(); // incia ou volta a execucao do processo
         int makeready(int id); // faz o processo sair da fila de bloqueados para a fila de prontos
-        void exec(); // método para execução do processo
+        //void exec(); // método para execução do processo
         
         // Printa o diagrama de execução dos processos
         // void printdiagram();

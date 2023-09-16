@@ -18,7 +18,7 @@ class SJF_Scheduler{
         void exec(Process* process, int time);
         
     private:
-        vector<Process*> process_list; // lista de processos
+        //vector<Process*> process_list; // lista de processos
         int clock_counter = 0;
         Process* running_process = nullptr;
 

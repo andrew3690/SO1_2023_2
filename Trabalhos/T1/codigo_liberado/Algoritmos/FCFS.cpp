@@ -8,12 +8,41 @@ FCFS_Scheduler::FCFS_Scheduler() {
 void FCFS_Scheduler::escalonate(std::vector<Process*> processVector) {
     std::cout << "Entrei no escalonador ! timer:" << gettimer() << "\n";
 
-    for (auto& process: processVector) {
-        std::cout << "Entrei no loop dos processos ! \n";
-        std::cout << "Id: " << process->getid() << "\n";
+    while (Process::Blocked_queue.size() > 0 || Process::Ready_queue.size() > 0 || running_process != nullptr) {
+        sleep(1);
 
-        process->start();
+        for (int i = 0; i < Process::Blocked_queue.size(); i++) {
+            Process* blocked_process = Process::Blocked_queue.front();
+            if (blocked_process->gettime() == clock_counter) {
+                blocked_process->makeready(blocked_process->getid()); // coloca processo na lista de pronto
+            }
+        }
+        Process* process;
+
+        if (running_process == nullptr) {
+            process = Process::Ready_queue.front();
+            process->start();
+            running_process = process;
+        }
+
+        if (process->getduration() > 0)
+        {
+            exec(process, clock_counter);
+        }
+
+        if (process->getduration() == 0) {
+            process->stop();
+            process->endprocess();
+            running_process = nullptr;
+        }
+        clock_counter++;
     }
+    // for (auto& process: processVector) {
+    //     std::cout << "Entrei no loop dos processos ! \n";
+    //     std::cout << "Id: " << process->getid() << "\n";
+
+    //     process->start();
+    // }
 
     std::cout << "Sai do loop dos processos ! Timer:" << gettimer() << "\n";
 }

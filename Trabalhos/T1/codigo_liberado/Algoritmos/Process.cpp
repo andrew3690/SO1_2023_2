@@ -114,7 +114,7 @@ void Process::start(){
     // running->exec();
 }
 
-void Process::exec(){
+//void Process::exec(){
     // enquanto houver tempo para execução do processo e este estiver no estado Running....
     // while(this->state == Running && this->getduration() != 0){
     //     sleep(1);
@@ -133,7 +133,7 @@ void Process::exec(){
     // };
     //this->dectime();
     //this->setTurnarroundTimer();
-}
+//}
 
 void Process::endprocess(){
     // Printa os dados requisitados
