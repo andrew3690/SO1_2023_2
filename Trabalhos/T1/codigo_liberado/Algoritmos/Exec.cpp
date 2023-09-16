@@ -32,7 +32,7 @@ int main (){
     // Instanciação dos escalonadores para cada lista de processos. 
     FCFS_Scheduler fcfsScheduler;
     SJF_Scheduler sjfScheduler;
-    NonPPriorityScheduler npremptive;
+    NonPriorityScheduler npremptive;
     Round_robin round_robin;
     
     while(true){
