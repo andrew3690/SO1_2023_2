@@ -14,11 +14,8 @@ class Round_robin: private Generic_Scheduler
         ~Round_robin();
 
         void escalonate();
-        //void schedule();
-        // void sort();
 
     private:
-        vector<Process> process_list; // FIFO para o algoritmo
         const int quantum = 2; // valor do quantum em segundos
 };
 

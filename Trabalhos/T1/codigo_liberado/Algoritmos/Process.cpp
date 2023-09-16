@@ -67,6 +67,11 @@ int Process::makeready(int id){
     return -1; // Indica que o processo não foi encontrado
 }
 
+void Process::preempt()
+{
+    Ready_queue.push_back(this);
+}
+
 // Método para parar o processo especificado pelo id
 void Process::stop(){
     // verifica se o process o está rodando

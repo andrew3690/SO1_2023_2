@@ -17,6 +17,7 @@ class Process: public CPU::Context{
         void stop();  // interrrupcao do processo
         void start(); // incia ou volta a execucao do processo
         int makeready(int id); // faz o processo sair da fila de bloqueados para a fila de prontos
+        void preempt(); // faz o processo em execução retornar para a fila de pronto
         //void exec(); // método para execução do processo
         
         // Printa o diagrama de execução dos processos
@@ -30,6 +31,7 @@ class Process: public CPU::Context{
         int setswitchcontextcounter(){return switch_context_count++;};
         int setreadlistavgcounter(){return read_list_avg_time++;};
         void increasequantum() {current_quantum++;};
+        void resetquantum() {current_quantum = 0;};
 
         // getters das variaveis do trabalho 
         int getTurnarroundTime(){return tunarround_time;};

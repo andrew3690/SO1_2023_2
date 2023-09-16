@@ -17,7 +17,6 @@ void Round_robin::escalonate(){
                 blocked_process->makeready(blocked_process->getid()); // coloca processo na lista de pronto
             }
         }
-        //Process::Ready_queue = sort(Process::Ready_queue); // ordena
         Process* process;
 
         if (running_process == nullptr) {
@@ -32,20 +31,16 @@ void Round_robin::escalonate(){
         }
 
         if (process->getduration() == 0) {
+            // processo atual terminou suas instruções
             process->stop();
             process->endprocess();
             running_process = nullptr;
-        } else if (process->getquantum() == 2) {
-            process->stop(); // deveria voltar para lista de prontos
+        } else if (process->getquantum() == quantum) {
+            // processo ja executou por 2 segundos e deve ser preemptado
+            process->preempt(); // volta para o final da lista de prontos
+            process->resetquantum();
+            running_process = nullptr;
         }
         clock_counter++;
     }
 }
-
-// void Round_robin::sort(){
-
-// }
-
-// void Round_robin::schedule(){
-
-// }
