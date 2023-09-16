@@ -13,13 +13,12 @@ void SJF_Scheduler::exec(Process* process, int time)
 {
     std::cout << "executou no tempo: " << time << "\n";
     process->dectime(); // decrementa a duração restante
-    //clock_counter++;
 }
 
 
 void SJF_Scheduler::escalonate(std::vector<Process*> processVector) // lista de blocked
 {
-    while (Process::Blocked_queue.size() > 0) {
+    while (Process::Blocked_queue.size() > 0 || Process::Ready_queue.size() > 0 || running_process != nullptr) {
         sleep(1);
 
         for (int i = 0; i < Process::Blocked_queue.size(); i++) {
@@ -29,9 +28,13 @@ void SJF_Scheduler::escalonate(std::vector<Process*> processVector) // lista de 
             }
         }
         Process::Ready_queue = sort(Process::Ready_queue); // ordena
+        Process* process;
 
-        Process* process = Process::Ready_queue.front();
-        process->start();
+        if (running_process == nullptr) {
+            process = Process::Ready_queue.front();
+            process->start();
+            running_process = process;
+        }
 
         if (process->getduration() > 0)
         {
@@ -41,10 +44,9 @@ void SJF_Scheduler::escalonate(std::vector<Process*> processVector) // lista de 
         if (process->getduration() == 0) {
             process->stop();
             process->endprocess();
-            // Process* process = Process::Ready_queue.front();
+            running_process = nullptr;
         }
-        //clock_counter++;
-
+        clock_counter++;
     }
     // process_list = processVector;
     // sort();
