@@ -139,5 +139,5 @@ void Process::endprocess(){
     // Printa os dados requisitados
     std::cout << "Turnarround Time: " << this->getTurnarroundTime() << " Tempo médio  de espera: "<< this->getreadlistavgcounter() <<" Total de trocas de contexto: " << this->getswitchcontextcounter() <<" \n";
     // Chama o destrutor do Processo
-    this->~Process();
+    delete this;
 }
