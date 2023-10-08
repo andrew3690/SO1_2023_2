@@ -24,8 +24,6 @@ namespace Simulador {
 		void SubsPage();
 
 		void nextPagetoReplace();
-
-		void operation();
 	};
 }
 

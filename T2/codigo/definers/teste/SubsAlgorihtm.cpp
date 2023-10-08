@@ -1,4 +1,4 @@
-#include "definers/SubsAlgorihtm.h"
+#include "SubsAlgorihtm.h"
 
 void Simulador::SubsAlgorihtm::ExecutePageSubs() {
 	// TODO - implement SubsAlgorihtm::ExecutePageSubs
@@ -10,7 +10,7 @@ void Simulador::SubsAlgorihtm::getAcessmemoryqtd() {
 	throw "Not yet implemented";
 }
 
-void Simulador::SubsAlgorihtm::setAcessmemoryqtd(int Acessmemoryqtd, int Acessmemoryqtd) {
+void Simulador::SubsAlgorihtm::setAcessmemoryqtd(int Acessmemoryqtd) {
 	// TODO - implement SubsAlgorihtm::setAcessmemoryqtd
 	throw "Not yet implemented";
 }
@@ -20,7 +20,7 @@ void Simulador::SubsAlgorihtm::getPagefaultqtd() {
 	throw "Not yet implemented";
 }
 
-void Simulador::SubsAlgorihtm::setPagefaultqtd(int Pagefaultqtd, int Pagefaultqtd) {
+void Simulador::SubsAlgorihtm::setPagefaultqtd(int Pagefaultqtd) {
 	// TODO - implement SubsAlgorihtm::setPagefaultqtd
 	throw "Not yet implemented";
 }
@@ -37,10 +37,5 @@ void Simulador::SubsAlgorihtm::SubsPage() {
 
 void Simulador::SubsAlgorihtm::nextPagetoReplace() {
 	// TODO - implement SubsAlgorihtm::nextPagetoReplace
-	throw "Not yet implemented";
-}
-
-void Simulador::SubsAlgorihtm::operation() {
-	// TODO - implement SubsAlgorihtm::operation
 	throw "Not yet implemented";
 }

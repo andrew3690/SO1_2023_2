@@ -3,6 +3,12 @@
 
 namespace Simulador {
 	class LRU {
+
+
+	public:
+		void SubsPage();
+
+		void UpdateFrame();
 	};
 }
 

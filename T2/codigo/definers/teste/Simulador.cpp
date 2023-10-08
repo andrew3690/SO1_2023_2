@@ -1,4 +1,4 @@
-#include "definers/Simulador.h"
+#include "Simulador.h"
 
 void Simulador::Simulador::main() {
 	// TODO - implement Simulador::main
@@ -10,7 +10,7 @@ void Simulador::Simulador::getFrameqtd() {
 	throw "Not yet implemented";
 }
 
-void Simulador::Simulador::setFrameqtd(int frameqtd, int frameqtd) {
+void Simulador::Simulador::setFrameqtd(int frameqtd) {
 	this->frameqtd = frameqtd;
 }
 
@@ -19,7 +19,7 @@ void Simulador::Simulador::getRefsequence() {
 	throw "Not yet implemented";
 }
 
-void Simulador::Simulador::setRefsequence(int refsequence, int refsequence) {
+void Simulador::Simulador::setRefsequence(int refsequence) {
 	this->refsequence = refsequence;
 }
 
@@ -33,7 +33,7 @@ void Simulador::Simulador::Callalgorithm() {
 	throw "Not yet implemented";
 }
 
-void Simulador::Simulador::InputHandler(char* file, char* file) {
+void Simulador::Simulador::InputHandler(char* file) {
 	// TODO - implement Simulador::InputHandler
 	throw "Not yet implemented";
 }

@@ -3,6 +3,12 @@
 
 namespace Simulador {
 	class OPT {
+
+
+	public:
+		void UpdateFrame();
+
+		void SubsPage();
 	};
 }
 

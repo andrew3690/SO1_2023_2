@@ -2,7 +2,7 @@
 #define FIFO_H
 
 namespace Simulador {
-	class FIFO : Simulador::SubsAlgorihtm {
+	class FIFO {
 	};
 }
 
