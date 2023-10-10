@@ -1,5 +1,7 @@
 #ifndef SUBSALGORIHTM_H
 #define SUBSALGORIHTM_H
+#include <queue>
+#include <string>
 
 namespace Simulador {
 	class SubsAlgorihtm {
@@ -9,23 +11,45 @@ namespace Simulador {
 		int Pagefaultqtd;
 
 	public:
+		/**
+		 * Método de execução da troca de páginas
+		 */
 		void ExecutePageSubs();
 
+		/**
+		 * Obtém a quantidade de acessos na memória
+		 */
 		void getAcessmemoryqtd();
 
+		/**
+		 * incrementa a quantidade de acessos na memória
+		 */
 		void setAcessmemoryqtd(int Acessmemoryqtd);
 
+		/**
+		 * Obtém a quantidade de faltas de páginas no algoritmo
+		 */
 		void getPagefaultqtd();
 
+		/**
+		 * incrementa a quantidade de faltas de página
+		 */
 		void setPagefaultqtd(int Pagefaultqtd);
 
-		void UpdateFrame();
+		/**
+		 * Atualização do quadro de página a ser utilizado
+		 */
+		virtual void UpdateFrame() = 0;
 
-		void SubsPage();
+		/**
+		 * Método que decide qual página deve ser substituída
+		 */
+		virtual void SubsPage() = 0;
 
-		void nextPagetoReplace();
-
-		void operation();
+		/**
+		 * Obtenção da próxima página a ser executada
+		 */
+		virtual void nextPagetoReplace() = 0;
 	};
 }
 

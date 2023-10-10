@@ -1,39 +1,68 @@
 #include "definers/Simulador.h"
 
-void Simulador::Simulador::main() {
-	// TODO - implement Simulador::main
-	throw "Not yet implemented";
+int Simulador::Simulador::InputHandler(int agrc, char* file[]) {
+	// TODO - implement Simulador::InputHandler
+
+	// Idéia do método, obtém a entrada de listas de refeencias do arquivo passado	
+	// primeira verifica se o nome passado pelo usuário é válido
+	if(agrc != 2){
+		std::cerr<< "Uso: " << file[0] << "nome do arquivo" <<std::endl;
+	};
+
+	//seta a quantidade de quadros de página, que o usuário deseja
+	setFrameqtd(agrc);
+
+	//Obtém o nome do arquivo nos argumentos
+	std::string NomedoArquivo = file[1];
+
+	//Abre o arquivo para leitura
+	std::ifstream arquivo(NomedoArquivo);
+
+	// Verifica se o arquivo foi aberto com sucesso
+	if(!arquivo.is_open()){
+		std::cerr << "Erro ao abrir o arquivo" << NomedoArquivo << std::endl;
+		return 1;
+	}
+
+	// Obtém as linhas do arquivo e insere as referencias de páginas na fila de páginas 
+	std::string linha;
+	while(!feof(stdin)){
+		std::cout << linha << std::endl;
+		addToQueue(linha); // Adiciona a linha a fila de referencias
+	}
+
+	// Fechamento dos arquivos
+	arquivo.close();
+
 }
 
-void Simulador::Simulador::getFrameqtd() {
-	// TODO - implement Simulador::getFrameqtd
-	throw "Not yet implemented";
-}
-
-void Simulador::Simulador::setFrameqtd(int frameqtd, int frameqtd) {
-	this->frameqtd = frameqtd;
-}
-
-void Simulador::Simulador::getRefsequence() {
-	// TODO - implement Simulador::getRefsequence
-	throw "Not yet implemented";
-}
-
-void Simulador::Simulador::setRefsequence(int refsequence, int refsequence) {
-	this->refsequence = refsequence;
-}
 
 void Simulador::Simulador::Showresult() {
 	// TODO - implement Simulador::Showresult
-	throw "Not yet implemented";
+	std::cout << this->frameqtd <<"quadros" <<std::endl;
+	std::cout << this->filaDepgs.size() <<"refs" <<std::endl;
+	std::cout << "FIFO: " <<"PFs" <<std::endl;
+	std::cout << "LRU: " <<"PFs" <<std::endl;
+	std::cout << "OPT: " <<"PFs" <<std::endl;
 }
 
 void Simulador::Simulador::Callalgorithm() {
-	// TODO - implement Simulador::Callalgorithm
-	throw "Not yet implemented";
+	// Chamada do FIFO
+	
+	// Chamada do LRU
+
+	// Chamada do OPT
 }
 
-void Simulador::Simulador::InputHandler(char* file, char* file) {
-	// TODO - implement Simulador::InputHandler
-	throw "Not yet implemented";
+Simulador::Simulador::~Simulador(){
+	std::cout << "Finalizando o simulador" <<std::endl; 
+}
+
+void Simulador::Simulador::main(int argc, char* argv[]) {
+	// Instanciando o simulador
+	Simulador simul;
+	// obtendo as referencias das entradas 
+	simul.InputHandler(argc,argv);
+	// Chamada dos algoritmos é realizada aqui;
+	simul.Callalgorithm();
 }
