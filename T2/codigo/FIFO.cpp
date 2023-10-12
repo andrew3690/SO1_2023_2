@@ -1,6 +1,10 @@
+#include "definers/FIFO.h"
+
+using namespace Simulador;
 
 
-Simulador::FIFO::FIFO(int pageframes, char* pagesequence, int pageframes, char* pagesequence) {
+// ARRUMAR ISSO AQ
+FIFO::FIFO(int pageframes, char* pagesequence, int pageframes, char* pagesequence) {
 	// TODO - implement FIFO::FIFO
 	throw "Not yet implemented";
 }

@@ -1,8 +1,10 @@
 #ifndef FIFO_H
 #define FIFO_H
 
+#include "SubsAlgorithm.h"
+
 namespace Simulador {
-	class FIFO : Simulador::SubsAlgorihtm {
+	class FIFO : public SubsAlgorithm {
 
 	public:
 		char* pageseq;

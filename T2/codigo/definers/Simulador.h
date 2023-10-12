@@ -15,6 +15,9 @@ namespace Simulador {
 
 
 	public:
+		// construtor
+		Simulador(int agrc, char* agrv[]);
+
 		// obtém a quantidade de frames
 		int getFrameqtd(){
 			return frameqtd;
@@ -45,7 +48,7 @@ namespace Simulador {
 		int InputHandler(int agrc, char* file[]);
 
 		// Método de execução das funções do simulador
-		void main(int agrc, char* agrv[]);
+		//void main(int agrc, char* agrv[]);
 
 		// Destrutor da classe
 		~Simulador();

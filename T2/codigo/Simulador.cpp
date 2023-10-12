@@ -1,5 +1,15 @@
 #include "definers/Simulador.h"
 
+
+Simulador::Simulador::Simulador(int argc, char* argv[])
+{
+	std::cout << "teste" << std::endl;
+	// obtendo as referencias das entradas 
+	this->InputHandler(argc,argv);
+	// Chamada dos algoritmos é realizada aqui;
+	this->Callalgorithm();
+}
+
 int Simulador::Simulador::InputHandler(int agrc, char* file[]) {
 	// TODO - implement Simulador::InputHandler
 
@@ -58,11 +68,11 @@ Simulador::Simulador::~Simulador(){
 	std::cout << "Finalizando o simulador" <<std::endl; 
 }
 
-void Simulador::Simulador::main(int argc, char* argv[]) {
+/*void Simulador::Simulador::main(int argc, char* argv[]) {
 	// Instanciando o simulador
 	Simulador simul;
 	// obtendo as referencias das entradas 
 	simul.InputHandler(argc,argv);
 	// Chamada dos algoritmos é realizada aqui;
 	simul.Callalgorithm();
-}
+}*/

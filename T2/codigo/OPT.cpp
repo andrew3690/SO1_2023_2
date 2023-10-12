@@ -1,11 +1,14 @@
 #include "definers/OPT.h"
 
-void Simulador::OPT::UpdateFrame() {
+using namespace Simulador;
+
+void OPT::SubsAlgorithm::UpdateFrame() {
 	// TODO - implement OPT::UpdateFrame
 	throw "Not yet implemented";
+
 }
 
-void Simulador::OPT::SubsPage() {
+void OPT::SubsAlgorithm::SubsPage() {
 	// TODO - implement OPT::SubsPage
 	throw "Not yet implemented";
 }

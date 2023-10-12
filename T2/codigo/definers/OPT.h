@@ -1,8 +1,15 @@
 #ifndef OPT_H
 #define OPT_H
 
+#include "SubsAlgorithm.h"
+
 namespace Simulador {
-	class OPT {
+	class OPT: public SubsAlgorithm {
+		public:
+
+			//construtor 
+			OPT();
+
 	};
 }
 

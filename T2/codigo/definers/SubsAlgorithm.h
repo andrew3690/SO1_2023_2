@@ -4,7 +4,7 @@
 #include <string>
 
 namespace Simulador {
-	class SubsAlgorihtm {
+	class SubsAlgorithm {
 
 	private:
 		int Acessmemoryqtd;
