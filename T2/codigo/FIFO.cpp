@@ -4,7 +4,7 @@ using namespace Simulador;
 
 
 // ARRUMAR ISSO AQ
-FIFO::FIFO(int pageframes, char* pagesequence, int pageframes, char* pagesequence) {
+FIFO::FIFO(int pageframes, char* pagesequence) {
 	// TODO - implement FIFO::FIFO
 	throw "Not yet implemented";
 }

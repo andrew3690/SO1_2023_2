@@ -9,6 +9,8 @@ namespace Simulador {
 
 			//construtor 
 			OPT();
+			void UpdateFrame() override;
+			void SubsPage() override;
 
 	};
 }

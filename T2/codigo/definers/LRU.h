@@ -5,6 +5,9 @@
 
 namespace Simulador {
 	class LRU: public SubsAlgorithm {
+		public:
+			void UpdateFrame() override;
+			void SubsPage() override;
 	};
 }
 

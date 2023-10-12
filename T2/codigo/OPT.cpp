@@ -2,13 +2,13 @@
 
 using namespace Simulador;
 
-void OPT::SubsAlgorithm::UpdateFrame() {
+void OPT::UpdateFrame() {
 	// TODO - implement OPT::UpdateFrame
 	throw "Not yet implemented";
 
 }
 
-void OPT::SubsAlgorithm::SubsPage() {
+void OPT::SubsPage() {
 	// TODO - implement OPT::SubsPage
 	throw "Not yet implemented";
 }
