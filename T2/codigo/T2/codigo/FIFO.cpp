@@ -1,30 +1,70 @@
 #include "definers/FIFO.h"
-
 using namespace Simulador;
 
-
-// ARRUMAR ISSO AQ
-FIFO::FIFO(int pageframes, char* pagesequence) {
-	// TODO - implement FIFO::FIFO
-	throw "Not yet implemented";
+FIFO::FIFO(int pageframes, std::queue<char> pagesequence) {
+	// enquanto a sequencia de páginas nãop estiver vazia...
+	while(!pagesequence.empty())
+	{
+		// percorre-se a fila de páginas...
+		for(int pageiter = 0; pageiter <= pageframes;pageiter++){
+			// obtém a página que está no topo da sequencia de páginas
+			char page_ = pagesequence.front();
+			pagesequence.pop();
+			//verifica se a fila está cheia:....
+			if(isQueueFull(pageframes))
+			{
+					// se a fila está cheia, verifica se a página já está na fila.. (Chamada de isPageInQueue)
+					if(isPageInQueue(getpageseq(),page_)){
+						// se a página estiver na fila é um page hit...
+						Simulador::SubsAlgorithm::setAcessmemoryqtd(page_);
+					}else{
+						// se a página não estiver na fila, é um page fault,substitui a página... (Chamda de Subspage e Nextpagetoreplace)
+						nextPagetoReplace(page_);
+						Simulador::SubsAlgorithm::setPagefaultqtd(page_);
+					}
+			}else{
+				// se a fila não está cheia, a página deve ser inserida no fim da fila... (UpdateFrame)
+				UpdateFrame(page_);
+			}
+		}
+	}
 }
 
-void Simulador::FIFO::enqueue() {
-	// TODO - implement FIFO::enqueue
-	throw "Not yet implemented";
+std::queue<char> Simulador::FIFO::getpageseq(){
+	return pageseq;
 }
 
-void Simulador::FIFO::dequeue() {
-	// TODO - implement FIFO::dequeue
-	throw "Not yet implemented";
+void Simulador::FIFO::enqueue(char page) {
+	pageseq.push(page);
 }
 
-void Simulador::FIFO::getqueuesize() {
-	// TODO - implement FIFO::getqueuesize
-	throw "Not yet implemented";
+char Simulador::FIFO::dequeue() {
+	pageseq.pop();	
 }
 
-void Simulador::FIFO::setqueuesize() {
-	// TODO - implement FIFO::setqueuesize
-	throw "Not yet implemented";
+bool Simulador::FIFO::isQueueFull(int pageframes) {
+    return pageseq.size() == static_cast<size_t>(pageframes);
+}
+
+bool Simulador::FIFO::isPageInQueue(std::queue<char> pageFrames, char page) {
+    while (!pageFrames.empty()) {
+        if (pageFrames.front() == page) {
+            return true;
+        }
+        pageFrames.pop();
+    }
+    return false;
+}
+
+void Simulador::FIFO::SubsPage(char page){
+	// desnefileira a página
+	dequeue();
+}
+
+void Simulador::FIFO::UpdateFrame(char page){
+	enqueue(page);
+}
+
+void Simulador::FIFO::nextPagetoReplace(char page){
+	// acessa a fila de referencias de página e o obtém a próxima página a sr executada.
 }

@@ -7,19 +7,14 @@ namespace Simulador {
 	class SubsAlgorithm {
 
 	private:
-		int Acessmemoryqtd;
-		int Pagefaultqtd;
+		int Acessmemoryqtd_;
+		int Pagefaultqtd_;
 
 	public:
 		/**
-		 * Método de execução da troca de páginas
-		 */
-		void ExecutePageSubs();
-
-		/**
 		 * Obtém a quantidade de acessos na memória
 		 */
-		void getAcessmemoryqtd();
+		int getAcessmemoryqtd();
 
 		/**
 		 * incrementa a quantidade de acessos na memória
@@ -29,7 +24,7 @@ namespace Simulador {
 		/**
 		 * Obtém a quantidade de faltas de páginas no algoritmo
 		 */
-		void getPagefaultqtd();
+		int getPagefaultqtd();
 
 		/**
 		 * incrementa a quantidade de faltas de página
@@ -39,17 +34,17 @@ namespace Simulador {
 		/**
 		 * Atualização do quadro de página a ser utilizado
 		 */
-		virtual void UpdateFrame() = 0;
+		virtual void UpdateFrame(char page) = 0;
 
 		/**
 		 * Método que decide qual página deve ser substituída
 		 */
-		virtual void SubsPage() = 0;
+		virtual void SubsPage(char page) = 0;
 
 		/**
 		 * Obtenção da próxima página a ser executada
 		 */
-		virtual void nextPagetoReplace() = 0;
+		virtual void nextPagetoReplace(char page) = 0;
 	};
 }
 
