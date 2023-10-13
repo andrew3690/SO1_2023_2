@@ -9,6 +9,7 @@ FIFO::FIFO(int pageframes, std::queue<char> pagesequence) {
 		for(int pageiter = 0; pageiter <= pageframes;pageiter++){
 			// obtém a página que está no topo da sequencia de páginas
 			char page_ = pagesequence.front();
+			// retira a página que está no topo da sequencia...
 			pagesequence.pop();
 			//verifica se a fila está cheia:....
 			if(isQueueFull(pageframes))
@@ -16,11 +17,11 @@ FIFO::FIFO(int pageframes, std::queue<char> pagesequence) {
 					// se a fila está cheia, verifica se a página já está na fila.. (Chamada de isPageInQueue)
 					if(isPageInQueue(getpageseq(),page_)){
 						// se a página estiver na fila é um page hit...
-						Simulador::SubsAlgorithm::setAcessmemoryqtd(page_);
+						Simulador::FIFO::SubsAlgorithm::setAcessmemoryqtd(page_);
 					}else{
 						// se a página não estiver na fila, é um page fault,substitui a página... (Chamda de Subspage e Nextpagetoreplace)
-						nextPagetoReplace(page_);
-						Simulador::SubsAlgorithm::setPagefaultqtd(page_);
+						Simulador::FIFO::SubsAlgorithm::setPagefaultqtd(page_);
+						dequeue();
 					}
 			}else{
 				// se a fila não está cheia, a página deve ser inserida no fim da fila... (UpdateFrame)
