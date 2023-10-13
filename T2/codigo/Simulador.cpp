@@ -3,30 +3,32 @@
 
 Simulador::Simulador::Simulador(int argc, char* argv[])
 {
-	std::cout << "teste" << std::endl;
 	// obtendo as referencias das entradas 
 	this->InputHandler(argc,argv);
 	// Chamada dos algoritmos é realizada aqui;
 	this->Callalgorithm();
 }
 
+
 int Simulador::Simulador::InputHandler(int agrc, char* file[]) {
 	// TODO - implement Simulador::InputHandler
 
 	// Idéia do método, obtém a entrada de listas de refeencias do arquivo passado	
 	// primeira verifica se o nome passado pelo usuário é válido
-	if(agrc != 2){
-		std::cerr<< "Uso: " << file[0] << "nome do arquivo" <<std::endl;
+	if(agrc != 3){
+		std::cerr<< "Uso: " << file[0] << " nome do arquivo" <<std::endl;
 	};
 
 	//seta a quantidade de quadros de página, que o usuário deseja
-	setFrameqtd(agrc);
+	setFrameqtd(std::stoi(file[1]));
 
 	//Obtém o nome do arquivo nos argumentos
-	std::string NomedoArquivo = file[1];
+	std::string NomedoArquivo = file[2];
 
 	//Abre o arquivo para leitura
-	std::ifstream arquivo(NomedoArquivo);
+	std::ifstream arquivo;
+	arquivo.open(NomedoArquivo);
+	std::cout << "filename:   " << NomedoArquivo << "\n";
 
 	// Verifica se o arquivo foi aberto com sucesso
 	if(!arquivo.is_open()){
@@ -36,7 +38,8 @@ int Simulador::Simulador::InputHandler(int agrc, char* file[]) {
 
 	// Obtém as linhas do arquivo e insere as referencias de páginas na fila de páginas 
 	std::string linha;
-	while(!feof(stdin)){
+	while(!arquivo.eof()){
+		std::getline(arquivo, linha);
 		std::cout << linha << std::endl;
 		addToQueue(linha); // Adiciona a linha a fila de referencias
 	}
@@ -46,6 +49,12 @@ int Simulador::Simulador::InputHandler(int agrc, char* file[]) {
 
 }
 
+void Simulador::Simulador::addToQueue(const std::string& newItem)
+{
+	if (newItem != "") {
+		filaDepgs.push(newItem);
+	}
+}
 
 void Simulador::Simulador::Showresult() {
 	// TODO - implement Simulador::Showresult

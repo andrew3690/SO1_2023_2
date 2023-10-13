@@ -9,7 +9,7 @@ program: main.o Simulador.o SubsAlgorithm.o OPT.o LRU.o FIFO.o
 main.o:	main.cpp
 	$(CC) $(CFLAGS) main.cpp -o main.o -c
 
-Simulator.o: Simulador.cpp Simulador.h
+Simulador.o: Simulador.cpp
 	$(CC) $(CFLAGS) Simulador.cpp -o Simulador.o -c
 
 SubsAlgorithm.o: SubsAlgorithm.cpp
@@ -25,7 +25,7 @@ FIFO.o: FIFO.cpp
 	$(CC) $(CFLAGS) FIFO.cpp -o FIFO.o -c
 
 run:
-	./program
+	./program 4 ./input/vsim-exemplo.txt
 
 clean:
 	rm -rf *.o *~ program

@@ -34,9 +34,7 @@ namespace Simulador {
     	}
 
 		// insere a página na fila de páginas
-		void addToQueue(const std::string& newItem) {
-        	filaDepgs.push(newItem);
-    	}
+		void addToQueue(const std::string& newItem);
 
 		// mostra o resultado do processamento do algoritmo de paginação
 		void Showresult();
