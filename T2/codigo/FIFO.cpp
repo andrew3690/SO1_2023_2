@@ -4,7 +4,7 @@ using namespace Simulador;
 
 
 // ARRUMAR ISSO AQ
-FIFO::FIFO(int pageframes, char* pagesequence) {
+FIFO::FIFO(int pageframes, std::queue<std::string> pagesequence) {
 	// TODO - implement FIFO::FIFO
 	throw "Not yet implemented";
 }
@@ -26,5 +26,20 @@ void Simulador::FIFO::getqueuesize() {
 
 void Simulador::FIFO::setqueuesize() {
 	// TODO - implement FIFO::setqueuesize
+	throw "Not yet implemented";
+}
+
+void Simulador::FIFO::SubsPage() {
+	// TODO - implement LRU::SubsPage
+	throw "Not yet implemented";
+}
+
+void Simulador::FIFO::UpdateFrame() {
+	// TODO - implement LRU::UpdateFrame
+	throw "Not yet implemented";
+}
+
+void Simulador::FIFO::nextPagetoReplace(int page) {
+	// TODO - implement LRU::UpdateFrame
 	throw "Not yet implemented";
 }

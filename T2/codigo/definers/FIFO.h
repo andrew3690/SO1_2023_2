@@ -2,6 +2,8 @@
 #define FIFO_H
 
 #include "SubsAlgorithm.h"
+#include <string>
+#include <queue>
 
 namespace Simulador {
 	class FIFO : public SubsAlgorithm {
@@ -9,7 +11,7 @@ namespace Simulador {
 	public:
 		char* pageseq;
 
-		FIFO(int pageframes, char* pagesequence);
+		FIFO(int pageframes, std::queue<std::string> pagesequence);
 
 		/**
 		 * enfileira um item na fila de páginas
@@ -30,6 +32,10 @@ namespace Simulador {
 		 * seta um novo tamanho da fila
 		 */
 		void setqueuesize();
+
+		void UpdateFrame() override;
+		void SubsPage() override;
+		void nextPagetoReplace(int page) override;
 	};
 }
 

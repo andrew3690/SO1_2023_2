@@ -29,12 +29,12 @@ namespace Simulador {
 		/**
 		 * Obtém a quantidade de faltas de páginas no algoritmo
 		 */
-		void getPagefaultqtd();
+		int getPagefaultqtd();
 
 		/**
 		 * incrementa a quantidade de faltas de página
 		 */
-		void setPagefaultqtd(int Pagefaultqtd);
+		void setPagefaultqtd(int pagefaultqtd);
 
 		/**
 		 * Atualização do quadro de página a ser utilizado
@@ -49,7 +49,7 @@ namespace Simulador {
 		/**
 		 * Obtenção da próxima página a ser executada
 		 */
-		virtual void nextPagetoReplace() = 0;
+		virtual void nextPagetoReplace(int page) = 0;
 	};
 }
 
