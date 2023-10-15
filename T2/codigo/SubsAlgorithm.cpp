@@ -15,9 +15,10 @@ void Simulador::SubsAlgorithm::getAcessmemoryqtd() {
 // 	throw "Not yet implemented";
 // }
 
-void Simulador::SubsAlgorithm::getPagefaultqtd() {
+int Simulador::SubsAlgorithm::getPagefaultqtd() {
 	// TODO - implement SubsAlgorihtm::getPagefaultqtd
-	throw "Not yet implemented";
+	//throw "Not yet implemented";
+	return Pagefaultqtd;
 }
 
 void Simulador::SubsAlgorithm::setAcessmemoryqtd(int Acessmemoryqtd) {
@@ -25,7 +26,8 @@ void Simulador::SubsAlgorithm::setAcessmemoryqtd(int Acessmemoryqtd) {
 	throw "Not yet implemented";
 }
 
-void Simulador::SubsAlgorithm::setPagefaultqtd(int Pagefaultqtd) {
+void Simulador::SubsAlgorithm::setPagefaultqtd(int pagefaultqtd) {
 	// TODO - implement SubsAlgorihtm::setPagefaultqtd
-	throw "Not yet implemented";
+	//throw "Not yet implemented";
+	Pagefaultqtd = pagefaultqtd;
 }

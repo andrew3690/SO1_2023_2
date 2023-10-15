@@ -5,14 +5,17 @@
 #include <fstream>
 #include <string>
 #include <queue>
+#include <vector>
+#include "LRU.h"
 
 namespace Simulador {
 	class Simulador {
 
 	private:
 		int frameqtd;
-		std::queue<std::string> filaDepgs; // Fila para armazenar as linhas
+		std::list<int> filaDepgs; // Fila para armazenar as linhas
 
+		LRU *lru;
 
 	public:
 		// construtor
@@ -29,7 +32,7 @@ namespace Simulador {
 		};
 
 		// obtém a fila de páginas
-		std::queue<std::string> getQueue() const {
+		std::list<int> getQueue() const {
         	return filaDepgs;
     	}
 

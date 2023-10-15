@@ -3,6 +3,7 @@
 
 Simulador::Simulador::Simulador(int argc, char* argv[])
 {
+	std::cout << "Iniciando o simulador" << "\n";
 	// obtendo as referencias das entradas 
 	this->InputHandler(argc,argv);
 	// Chamada dos algoritmos é realizada aqui;
@@ -52,28 +53,33 @@ int Simulador::Simulador::InputHandler(int agrc, char* file[]) {
 void Simulador::Simulador::addToQueue(const std::string& newItem)
 {
 	if (newItem != "") {
-		filaDepgs.push(newItem);
+		filaDepgs.push_back(std::stoi(newItem));
 	}
 }
 
 void Simulador::Simulador::Showresult() {
 	// TODO - implement Simulador::Showresult
-	std::cout << this->frameqtd <<"quadros" <<std::endl;
-	std::cout << this->filaDepgs.size() <<"refs" <<std::endl;
-	std::cout << "FIFO: " <<"PFs" <<std::endl;
-	std::cout << "LRU: " <<"PFs" <<std::endl;
-	std::cout << "OPT: " <<"PFs" <<std::endl;
+	std::cout << this->frameqtd <<"quadros" << "\n";
+	std::cout << this->filaDepgs.size() <<"refs" << "\n";
+	std::cout << "FIFO: " <<" PFs" << "\n";
+	std::cout << "LRU: " << lru->getPagefaultqtd() <<" PFs" << "\n";
+	std::cout << "OPT: " <<" PFs" << std::endl;
 }
 
 void Simulador::Simulador::Callalgorithm() {
 	// Chamada do FIFO
+	lru = new LRU(frameqtd);
+	lru->ExecutePageSubs(filaDepgs);
 	
 	// Chamada do LRU
 
 	// Chamada do OPT
+
+	Showresult();
 }
 
 Simulador::Simulador::~Simulador(){
+	delete lru;
 	std::cout << "Finalizando o simulador" <<std::endl; 
 }
 
