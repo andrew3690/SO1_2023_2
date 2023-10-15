@@ -2,6 +2,7 @@
 #define SUBSALGORIHTM_H
 #include <queue>
 #include <string>
+#include <list>
 
 namespace Simulador {
 	class SubsAlgorithm {
@@ -39,12 +40,12 @@ namespace Simulador {
 		/**
 		 * Atualização do quadro de página a ser utilizado
 		 */
-		virtual void UpdateFrame() = 0;
+		virtual void UpdateFrame(int page) = 0;
 
 		/**
 		 * Método que decide qual página deve ser substituída
 		 */
-		virtual void SubsPage() = 0;
+		virtual void SubsPage(int page) = 0;
 
 		/**
 		 * Obtenção da próxima página a ser executada

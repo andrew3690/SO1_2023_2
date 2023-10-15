@@ -5,12 +5,12 @@ Simulador::LRU::LRU(int frameqtd) {
 	framequantity = frameqtd;
 }
 
-void Simulador::LRU::SubsPage() {
+void Simulador::LRU::SubsPage(int page) {
 	// TODO - implement LRU::SubsPage
 	throw "Not yet implemented";
 }
 
-void Simulador::LRU::UpdateFrame() {
+void Simulador::LRU::UpdateFrame(int page) {
 	// TODO - implement LRU::UpdateFrame
 	throw "Not yet implemented";
 }

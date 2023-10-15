@@ -1,41 +1,43 @@
 #ifndef FIFO_H
 #define FIFO_H
-
 #include "SubsAlgorithm.h"
-#include <string>
-#include <queue>
 
 namespace Simulador {
 	class FIFO : public SubsAlgorithm {
-
+	private:
+		std::list<int> pageseq;
+		int pagehitcnt;
+		int pagefaultcnt;
+	
 	public:
-		char* pageseq;
-
-		FIFO(int pageframes, std::queue<std::string> pagesequence);
+		FIFO(int pageframes, std::list<int> pagesequence);
 
 		/**
 		 * enfileira um item na fila de páginas
 		 */
-		void enqueue();
+		void enqueue(char page);
 
 		/**
 		 * desenfileira um item da fila
 		 */
 		void dequeue();
 
-		/**
-		 * obtém o tamanho da fila
-		 */
-		void getqueuesize();
+		// método que verifica se uma página já está na fila de páginas
+		bool isPageInQueue(std::list<int> pageFrames, char page);
 
-		/**
-		 * seta um novo tamanho da fila
-		 */
-		void setqueuesize();
+		// método que verifica se a fila de páginas está cheia
+		bool isQueueFull(int pageframes);
 
-		void UpdateFrame() override;
-		void SubsPage() override;
+		// métodos abstratos da classe subsalgortihm
+		void SubsPage(int page) override;
+
+		void UpdateFrame(int page) override;
+
 		void nextPagetoReplace(int page) override;
+
+		std::list<int> getpageseq();
+
+
 	};
 }
 
