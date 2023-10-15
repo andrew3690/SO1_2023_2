@@ -1,17 +1,14 @@
 #ifndef OPT_H
 #define OPT_H
 
-#include "SubsAlgorithm.h"
-
 namespace Simulador {
-	class OPT: public SubsAlgorithm {
-		public:
+	class OPT {
 
-			//construtor 
-			OPT();
-			void UpdateFrame() override;
-			void SubsPage() override;
 
+	public:
+		void UpdateFrame();
+
+		void SubsPage();
 	};
 }
 
