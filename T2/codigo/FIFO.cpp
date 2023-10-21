@@ -1,16 +1,21 @@
 #include "definers/FIFO.h"
 using namespace Simulador;
 
-FIFO::FIFO(int pageframes, std::list<int> pagesequence){
+FIFO::FIFO(int pageframes){
 	// enquanto a sequencia de páginas nãop estiver vazia...
-	while(!pagesequence.empty())
+	setpageqtd(pageframes);
+}
+
+void FIFO::ExecutePageSubs(std::list<int>& ref_list){
+	int pageframes = getpageqtd();
+	while(!ref_list.empty())
 	{
 		// percorre-se a fila de páginas...
 		for(int pageiter = 0; pageiter <= pageframes;pageiter++){
 			// obtém a página que está no topo da sequencia de páginas
-			int page_ = pagesequence.front();
+			int page_ = ref_list.front();
 			// retira a página que está no topo da sequencia...
-			pagesequence.pop_front();
+			ref_list.pop_front();
 			//verifica se a fila está cheia:....
 			if(isQueueFull(pageframes))
 			{
@@ -29,6 +34,7 @@ FIFO::FIFO(int pageframes, std::list<int> pagesequence){
 			}
 		}
 	}
+
 }
 
 std::list<int> Simulador::FIFO::getpageseq(){

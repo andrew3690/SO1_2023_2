@@ -63,7 +63,7 @@ void Simulador::Simulador::Showresult() {
 	// TODO - implement Simulador::Showresult
 	std::cout << this->frameqtd <<" quadros" << "\n";
 	std::cout << this->filaDepgs.size() <<" refs" << "\n";
-	// std::cout << "FIFO: " <<fifo->getPagefaultqtd()<<" PFs" << "\n";
+	std::cout << "FIFO: " <<fifo->getPagefaultqtd()<<" PFs" << "\n";
 	std::cout << "LRU: " << lru->getPagefaultqtd() <<" PFs" << "\n";
 	std::cout << "OPT: " <<" PFs" << std::endl;
 }
@@ -74,7 +74,8 @@ void Simulador::Simulador::Callalgorithm() {
 	lru->ExecutePageSubs(filaDepgs);
 
 	// Chamada do FIFO
-	fifo = new FIFO(frameqtd,filaDepgs);
+	fifo = new FIFO(frameqtd);
+	fifo->ExecutePageSubs(filaDepgs);
 
 	// Chamada do OPT
 

@@ -19,8 +19,8 @@ namespace Simulador {
 		
 		FIFO *fifo;
 		LRU *lru;
-		
 		// OPT *opt;
+
 	public:
 		// construtor
 		Simulador(int agrc, char* agrv[]);

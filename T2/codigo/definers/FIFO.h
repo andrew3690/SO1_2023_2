@@ -8,9 +8,10 @@ namespace Simulador {
 		std::list<int> pageseq;
 		int pagehitcnt;
 		int pagefaultcnt;
+		int pageqtd;
 	
 	public:
-		FIFO(int pageframes, std::list<int> pagesequence);
+		FIFO(int pageframes);
 
 		/**
 		 * enfileira um item na fila de páginas
@@ -21,6 +22,12 @@ namespace Simulador {
 		 * desenfileira um item da fila
 		 */
 		void dequeue();
+
+		// Metodo para setar a quantidade de paginas
+		void setpageqtd(int pageqtd_){pageqtd = pageqtd_;};
+
+		// Metodo para obter a quantidade de paginas
+		int getpageqtd(){return pageqtd;};
 
 		// método que verifica se uma página já está na fila de páginas
 		bool isPageInQueue(std::list<int> pageFrames, char page);
@@ -36,6 +43,8 @@ namespace Simulador {
 		void nextPagetoReplace(int page) override;
 
 		std::list<int> getpageseq();
+
+		void ExecutePageSubs(std::list<int>& ref_list);
 
 
 	};
