@@ -7,6 +7,8 @@
 #include <queue>
 #include <vector>
 #include "LRU.h"
+#include "FIFO.h"
+#include "OPT.h"
 
 namespace Simulador {
 	class Simulador {
@@ -14,8 +16,10 @@ namespace Simulador {
 	private:
 		int frameqtd;
 		std::list<int> filaDepgs; // Fila para armazenar as linhas
-
+		
+		FIFO *fifo;
 		LRU *lru;
+		// OPT *opt;
 
 	public:
 		// construtor
