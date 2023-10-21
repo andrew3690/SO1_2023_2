@@ -14,7 +14,6 @@ namespace Simulador {
 			void ExecutePageSubs(std::list<int>& ref_list);
 
 		private:
-			int framequantity;
 			std::list<int> ordered_list;
 	};
 }

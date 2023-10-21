@@ -2,7 +2,7 @@
 #include <algorithm>
 
 Simulador::LRU::LRU(int frameqtd) {
-	framequantity = frameqtd;
+	frame_quantity = frameqtd;
 }
 
 void Simulador::LRU::SubsPage(int page) {
@@ -16,7 +16,7 @@ void Simulador::LRU::UpdateFrame(int page) {
 }
 
 void Simulador::LRU::nextPagetoReplace(int page) {
-	if (ordered_list.size() == framequantity) {
+	if (ordered_list.size() == frame_quantity) {
 		ordered_list.pop_back();
 	}
 	ordered_list.push_front(page);

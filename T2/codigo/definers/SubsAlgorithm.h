@@ -7,9 +7,10 @@
 namespace Simulador {
 	class SubsAlgorithm {
 
-	private:
-		int Acessmemoryqtd;
+	protected:
+		int acessmemoryqtd;
 		int Pagefaultqtd;
+		int frame_quantity;
 
 	public:
 		/**
