@@ -2,19 +2,22 @@
 #define OPT_H
 #include <list>
 #include "SubsAlgorithm.h"
+#include <algorithm>
 
 namespace Simulador {
 	class OPT: private SubsAlgorithm {
 
 
 	public:
-		class Page {
-			public:
-				int id;
-				int label = 0;
-		};
+		// class Page {
+		// 	public:
+		// 		int id;
+		// 		int label = 0;
+		// };
 		OPT(int frameqtd);
 		~OPT();
+
+		int findNextReferenceOfPage(int page, int start, std::list<int>& references);
 		void UpdateFrame(int page) override;
 
 		void SubsPage(int page) override;
