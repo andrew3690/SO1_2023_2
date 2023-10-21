@@ -69,14 +69,13 @@ void Simulador::Simulador::Showresult() {
 }
 
 void Simulador::Simulador::Callalgorithm() {
-	// Chamada do LRU
-	lru = new LRU(frameqtd);
-	lru->ExecutePageSubs(filaDepgs);
-
 	// Chamada do FIFO
 	fifo = new FIFO(frameqtd);
 	fifo->ExecutePageSubs(filaDepgs);
-
+	
+	// Chamada do LRU
+	lru = new LRU(frameqtd);
+	lru->ExecutePageSubs(filaDepgs);
 	// Chamada do OPT
 
 	Showresult();

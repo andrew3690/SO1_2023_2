@@ -43,5 +43,5 @@ void Simulador::LRU::ExecutePageSubs(std::list<int>& ref_list) {
 			nextPagetoReplace(page);
 		}
 	}
-	setPagefaultqtd(fault_quantity);
+	setPagefaultqtd();
 }
