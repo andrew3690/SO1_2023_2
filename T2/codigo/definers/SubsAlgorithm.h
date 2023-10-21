@@ -8,9 +8,8 @@ namespace Simulador {
 	class SubsAlgorithm {
 
 	protected:
-		int acessmemoryqtd;
-		int Pagefaultqtd;
-		int frame_quantity;
+		int Acessmemoryqtd_;
+		int Pagefaultqtd_;
 
 	public:
 		/**
@@ -21,7 +20,7 @@ namespace Simulador {
 		/**
 		 * Obtém a quantidade de acessos na memória
 		 */
-		void getAcessmemoryqtd();
+		int getAcessmemoryqtd();
 
 		/**
 		 * incrementa a quantidade de acessos na memória
@@ -36,7 +35,7 @@ namespace Simulador {
 		/**
 		 * incrementa a quantidade de faltas de página
 		 */
-		void setPagefaultqtd(int pagefaultqtd);
+		void setPagefaultqtd();
 
 		/**
 		 * Atualização do quadro de página a ser utilizado
