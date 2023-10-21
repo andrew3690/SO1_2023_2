@@ -2,7 +2,7 @@
 #include <algorithm>
 
 Simulador::LRU::LRU(int frameqtd) {
-	frame_quantity = frameqtd;
+	framequantity = frameqtd;
 }
 
 void Simulador::LRU::SubsPage(int page) {
@@ -16,7 +16,7 @@ void Simulador::LRU::UpdateFrame(int page) {
 }
 
 void Simulador::LRU::nextPagetoReplace(int page) {
-	if (ordered_list.size() == frame_quantity) {
+	if (ordered_list.size() == framequantity) {
 		ordered_list.pop_back();
 	}
 	ordered_list.push_front(page);
@@ -29,7 +29,8 @@ void Simulador::LRU::ExecutePageSubs(std::list<int>& ref_list) {
 		// iterador para a posição de pagina, se encontrada na lista ordenada do algoritmo
 		if (ordered_list.empty()) {
 			ordered_list.push_front(page);
-			fault_quantity++;
+			setPagefaultqtd();
+			//fault_quantity++;
 			continue;
 		}
 		auto page_position = std::find(ordered_list.begin(), ordered_list.end(), page);
@@ -39,9 +40,11 @@ void Simulador::LRU::ExecutePageSubs(std::list<int>& ref_list) {
 			ordered_list.push_front(page);
 		} else {
 			// caso pagina requisitada não está na memoria
-			fault_quantity++;
+			//fault_quantity++;
+			setPagefaultqtd();
 			nextPagetoReplace(page);
 		}
 	}
-	setPagefaultqtd();
+	//std::cout << "fault qtd: " << fault_quantity << std::endl;
+	//setPagefaultqtd();
 }

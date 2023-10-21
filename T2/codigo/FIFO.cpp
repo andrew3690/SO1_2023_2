@@ -19,7 +19,7 @@ void FIFO::ExecutePageSubs(std::list<int>& ref_list){
             // Adicione a página à fila de páginas (a mais recente)
             enqueue(page);
             // Aqui você pode fazer o acompanhamento das faltas de página, se necessário
-			Simulador::FIFO::SubsAlgorithm::setPagefaultqtd();
+			setPagefaultqtd();
         }
         // Caso a página já esteja na fila, nenhuma ação é necessária, pois é um "hit".
 		Simulador::FIFO::SubsAlgorithm::setAcessmemoryqtd(page);

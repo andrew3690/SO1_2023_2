@@ -1,10 +1,11 @@
 #include "definers/OPT.h"
+#include <iostream>
 
 using namespace Simulador;
 
 //construtor
 OPT::OPT(int frameqtd) {
-	frame_quantity = frameqtd;
+	//frame_quantity = frameqtd;
 }
 
 //destrutor

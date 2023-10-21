@@ -3,13 +3,14 @@
 #include <queue>
 #include <string>
 #include <list>
+#include <iostream>
 
 namespace Simulador {
 	class SubsAlgorithm {
 
 	protected:
 		int Acessmemoryqtd_;
-		int Pagefaultqtd_;
+		int Pagefaultqtd_ = 0;
 
 	public:
 		/**
