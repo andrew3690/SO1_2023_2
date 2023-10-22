@@ -8,6 +8,7 @@
 #include <vector>
 #include "LRU.h"
 #include "FIFO.h"
+#include "OPT.h"
 
 namespace Simulador {
 	class Simulador {
@@ -18,7 +19,7 @@ namespace Simulador {
 		
 		FIFO *fifo;
 		LRU *lru;
-		// OPT *opt;
+		OPT *opt;
 
 	public:
 		// construtor
@@ -58,9 +59,6 @@ namespace Simulador {
 		~Simulador();
 
 	};
-
-
-
 }
 
 #endif

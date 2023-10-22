@@ -41,7 +41,7 @@ void OPT::ExecutePageSubs(std::list<int>& to_be_referenced_pages) {
 			int lenght_until_next_reference = findNextReferenceOfPage(page, 0, to_be_referenced_pages);
 			std::cout << "tamanho ate proxima referencia: " << lenght_until_next_reference << "\n";
 			//list_of_pages_in_memory.push_front(page);
-			fault_quantity++;
+			setPagefaultqtd(page);
 			continue;
 		}
 	}

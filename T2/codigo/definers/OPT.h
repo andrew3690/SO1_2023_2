@@ -5,7 +5,7 @@
 #include <algorithm>
 
 namespace Simulador {
-	class OPT: private SubsAlgorithm {
+	class OPT: public SubsAlgorithm {
 
 
 	public:
