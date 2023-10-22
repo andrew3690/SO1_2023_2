@@ -36,7 +36,7 @@ namespace Simulador {
 		/**
 		 * incrementa a quantidade de faltas de página
 		 */
-		void setPagefaultqtd();
+		void setPagefaultqtd(int page);
 
 		/**
 		 * Atualização do quadro de página a ser utilizado

@@ -6,8 +6,15 @@ FIFO::FIFO(int pageframes){
 	setpageqtd(pageframes);
 }
 
-void FIFO::ExecutePageSubs(std::list<int>& ref_list){
-	int pageframes = getpageqtd();
+void FIFO::SubsPage(int page){
+	pageseq.push_back(page);
+}
+
+void FIFO::ExecutePageSubs(std::list<int>& ref_list) {
+    int pageframes = getpageqtd();
+    int pagefaultqtd = 0; // Inicializa o contador de faltas de página
+	// int pagehitqtd = 0;
+	// int iter = 0;
 
     for (int page : ref_list) {
         // Verifica se a página de referência já está na fila de páginas
@@ -18,20 +25,27 @@ void FIFO::ExecutePageSubs(std::list<int>& ref_list){
             }
             // Adicione a página à fila de páginas (a mais recente)
             enqueue(page);
-            // Aqui você pode fazer o acompanhamento das faltas de página, se necessário
-			setPagefaultqtd();
-        }
-        // Caso a página já esteja na fila, nenhuma ação é necessária, pois é um "hit".
-		Simulador::FIFO::SubsAlgorithm::setAcessmemoryqtd(page);
+            // Aumenta o contador de faltas de página
+            pagefaultqtd++;
+			// std::cout << iter <<" Pagina: " << page <<" Quantidade de faltas de pagina: " << pagefaultqtd <<"\n";
+			setPagefaultqtd(pagefaultqtd);
+        }else{
+			// Caso a página já esteja na fila, nenhuma ação é necessária, pois é um "hit".
+        	// pagehitqtd++;
+			// std::cout << iter <<" Pagina: " << page <<" Quantidade de faltas de pagina:" << pagehitqtd<<" sem falta de pagina\n";
+			setAcessmemoryqtd(page);
+		}
+		// iter++;
     }
 }
+
 
 std::list<int> Simulador::FIFO::getpageseq(){
 	return pageseq;
 }
 
 void Simulador::FIFO::enqueue(char page) {
-	pageseq.push_back(page);
+	SubsPage(page);
 }
 
 void Simulador::FIFO::dequeue() {
@@ -52,43 +66,10 @@ bool Simulador::FIFO::isPageInQueue(std::list<int> pageFrames, char page) {
     return false;
 }
 
-void Simulador::FIFO::SubsPage(int page){
-	// desnefileira a página
-	dequeue();
-}
-
 void Simulador::FIFO::UpdateFrame(int page){
-	enqueue(page);
+    // metodo virtual que nao eh implementado nesta funcao
 }
 
 void Simulador::FIFO::nextPagetoReplace(int page){
-	// acessa a fila de referencias de página e o obtém a próxima página a sr executada.
+    // metodo virtual que nao eh implementado nesta funcao
 }
-
-
-	// while(!ref_list.empty())
-	// {
-	// 	// percorre-se a fila de páginas...
-	// 	for(int pageiter = 0; pageiter <= pageframes;pageiter++){
-	// 		// obtém a página que está no topo da sequencia de páginas
-	// 		int page_ = ref_list.front();
-	// 		// retira a página que está no topo da sequencia...
-	// 		ref_list.pop_front();
-	// 		//verifica se a fila está cheia:....
-	// 		if(isQueueFull(pageframes))
-	// 		{
-	// 				// se a fila está cheia, verifica se a página já está na fila.. (Chamada de isPageInQueue)
-	// 				if(isPageInQueue(getpageseq(),page_)){
-	// 					// se a página estiver na fila é um page hit...
-	// 					Simulador::FIFO::SubsAlgorithm::setAcessmemoryqtd(page_);
-	// 				}else{
-	// 					// se a página não estiver na fila, é um page fault,substitui a página... (Chamda de Subspage e Nextpagetoreplace)
-	// 					Simulador::FIFO::SubsAlgorithm::setPagefaultqtd(page_);
-	// 					dequeue();
-	// 				}
-	// 		}else{
-	// 			// se a fila não está cheia, a página deve ser inserida no fim da fila... (UpdateFrame)
-	// 			UpdateFrame(page_);
-	// 		}
-	// 	}
-	// }

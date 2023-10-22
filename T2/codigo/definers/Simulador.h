@@ -8,7 +8,6 @@
 #include <vector>
 #include "LRU.h"
 #include "FIFO.h"
-#include "OPT.h"
 
 namespace Simulador {
 	class Simulador {

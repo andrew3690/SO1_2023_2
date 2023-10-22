@@ -28,8 +28,10 @@ void Simulador::SubsAlgorithm::setAcessmemoryqtd(int Acessmemoryqtd) {
 	}
 }
 
-void Simulador::SubsAlgorithm::setPagefaultqtd() {
+void Simulador::SubsAlgorithm::setPagefaultqtd(int page) {
 	// TODO - implement SubsAlgorihtm::setPagefaultqtd
 	//throw "Not yet implemented";
-	Pagefaultqtd_++;
+	if(page > 0){
+		Pagefaultqtd_++;
+	}
 }
