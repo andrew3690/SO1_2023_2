@@ -65,7 +65,7 @@ void Simulador::Simulador::Showresult() {
 	std::cout << this->filaDepgs.size() <<" refs" << "\n";
 	std::cout << "FIFO: " << fifo->getPagefaultqtd()<<" PFs" << "\n";
 	std::cout << "LRU: " << lru->getPagefaultqtd() <<" PFs" << "\n";
-	std::cout << "OPT: " <<" PFs" << std::endl;
+	std::cout << "OPT: " << opt->getPagefaultqtd() << " PFs" << std::endl;
 }
 
 void Simulador::Simulador::Callalgorithm() {
@@ -76,7 +76,10 @@ void Simulador::Simulador::Callalgorithm() {
 	// Chamada do LRU
 	lru = new LRU(frameqtd);
 	lru->ExecutePageSubs(filaDepgs);
+
 	// Chamada do OPT
+	opt = new OPT(frameqtd);
+	opt->ExecutePageSubs(filaDepgs);
 
 	Showresult();
 }

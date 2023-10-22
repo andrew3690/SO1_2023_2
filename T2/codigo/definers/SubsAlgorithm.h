@@ -3,6 +3,7 @@
 #include <queue>
 #include <string>
 #include <list>
+#include <vector>
 #include <iostream>
 
 namespace Simulador {

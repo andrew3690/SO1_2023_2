@@ -44,7 +44,7 @@ namespace Simulador {
 
 		std::list<int> getpageseq();
 
-		void ExecutePageSubs(std::list<int>& ref_list);
+		void ExecutePageSubs(std::vector<int>& ref_list);
 
 
 	};

@@ -15,11 +15,11 @@ namespace Simulador {
 
 	private:
 		int frameqtd;
-		std::list<int> filaDepgs; // Fila para armazenar as linhas
+		std::vector<int> filaDepgs; // Fila para armazenar as linhas
 		
 		FIFO *fifo;
 		LRU *lru;
-		// OPT *opt;
+		OPT *opt;
 
 	public:
 		// construtor
@@ -36,7 +36,7 @@ namespace Simulador {
 		};
 
 		// obtém a fila de páginas
-		std::list<int> getQueue() const {
+		std::vector<int> getQueue() const {
         	return filaDepgs;
     	}
 

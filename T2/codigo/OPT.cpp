@@ -5,13 +5,11 @@ using namespace Simulador;
 
 //construtor
 OPT::OPT(int frameqtd) {
-	//frame_quantity = frameqtd;
+	framequantity = frameqtd;
 }
 
 //destrutor
-OPT::~OPT() {
-
-}
+OPT::~OPT() {}
 
 void OPT::UpdateFrame(int page) {
 	// TODO - implement OPT::UpdateFrame
@@ -19,9 +17,11 @@ void OPT::UpdateFrame(int page) {
 
 }
 
-int OPT::findNextReferenceOfPage(int page, int start, std::list<int>& references) {
+/* Retorna um registro de quando uma página (page) será referenciada no futuro -> sera a etiqueta*/
+int OPT::findNextReferenceOfPage(int page, int start, std::vector<int>& references) {
 	int lenght = 0;
-	for (int &future_page: references ) {
+	for (int i = start+1; i<= references.size(); i++ ) {
+		auto future_page = references[i];
 		if (future_page == page) {
 			return lenght;
 		} else {
@@ -31,27 +31,58 @@ int OPT::findNextReferenceOfPage(int page, int start, std::list<int>& references
 	return lenght;
 }
 
-void OPT::ExecutePageSubs(std::list<int>& to_be_referenced_pages) {
-	int fault_quantity = 0;
+/* Algoritmo principal para substituição de páginas -> itera sobre lista de referências de páginas */
+void OPT::ExecutePageSubs(std::vector<int>& to_be_referenced_pages) {
+	int increment = 0;
 	for (int& page: to_be_referenced_pages) {
+		int lenght_until_next_reference = findNextReferenceOfPage(page, increment, to_be_referenced_pages);
 
-		auto page_position = std::find(to_be_referenced_pages.begin(), to_be_referenced_pages.end(), page);
-
-		if (list_of_pages_in_memory.empty()) {
-			int lenght_until_next_reference = findNextReferenceOfPage(page, 0, to_be_referenced_pages);
-			std::cout << "tamanho ate proxima referencia: " << lenght_until_next_reference << "\n";
-			//list_of_pages_in_memory.push_front(page);
-			fault_quantity++;
+		if (map_of_pages_in_memory.empty()) {
+			// std::cout << "referencia (pagina) autal: " << page << "\n";
+			// std::cout << "tamanho ate proxima referencia: " << lenght_until_next_reference << "\n";
+			map_of_pages_in_memory[page] = lenght_until_next_reference;
+			// page fault
+			setPagefaultqtd();
+			increment++;
 			continue;
 		}
+		auto in_memory = map_of_pages_in_memory.find(page); // procura se pagina referenciada está na RAM
+
+		if (in_memory != map_of_pages_in_memory.end()) {
+			map_of_pages_in_memory[page] = lenght_until_next_reference;
+		} else {
+			//página não está na ram -> deve-se substituir/alocar uma moldura
+			// page fault
+			setPagefaultqtd();
+			if (map_of_pages_in_memory.size() == framequantity) {
+				nextPagetoReplace(page);
+			}
+			map_of_pages_in_memory[page] = lenght_until_next_reference;
+		}
+		increment++;
 	}
 }
 
+/* descobre a pagina a ser substituida */
 void OPT::nextPagetoReplace(int page) {
-
+	int max_number = 0;
+	int page_to_replace = -1;
+	for (auto& page_in_memory: map_of_pages_in_memory) {
+		if (page_in_memory.second > max_number) {
+			max_number = page_in_memory.second;
+			page_to_replace = page_in_memory.first;
+		}
+	}
+	SubsPage(page_to_replace);
 }
 
-void OPT::SubsPage(int page) {
-	// TODO - implement OPT::SubsPage
-	throw "Not yet implemented";
+/* remove a pagina do argumento*/
+void OPT::SubsPage(int page_to_replace) {
+	auto it = map_of_pages_in_memory.find(page_to_replace);
+
+	if (it != map_of_pages_in_memory.end()) {
+		map_of_pages_in_memory.erase(it); // substitui a pagina
+	} else {
+		std::cout << "erro ao remover\n";
+	}
 }

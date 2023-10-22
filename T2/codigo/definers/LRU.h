@@ -2,7 +2,7 @@
 #define LRU_H
 
 #include "SubsAlgorithm.h"
-#include <list>
+#include <vector>
 
 namespace Simulador {
 	class LRU: public SubsAlgorithm {
@@ -11,7 +11,7 @@ namespace Simulador {
 			void UpdateFrame(int page) override;
 			void SubsPage(int page) override;
 			void nextPagetoReplace(int page) override;
-			void ExecutePageSubs(std::list<int>& ref_list);
+			void ExecutePageSubs(std::vector<int>& ref_list);
 
 		private:
 			int framequantity;

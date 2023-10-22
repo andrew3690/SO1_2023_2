@@ -1,11 +1,11 @@
 #ifndef OPT_H
 #define OPT_H
-#include <list>
+#include <unordered_map>
 #include "SubsAlgorithm.h"
 #include <algorithm>
 
 namespace Simulador {
-	class OPT: private SubsAlgorithm {
+	class OPT: public SubsAlgorithm {
 
 
 	public:
@@ -17,14 +17,15 @@ namespace Simulador {
 		OPT(int frameqtd);
 		~OPT();
 
-		int findNextReferenceOfPage(int page, int start, std::list<int>& references);
+		int findNextReferenceOfPage(int page, int start, std::vector<int>& references);
 		void UpdateFrame(int page) override;
 
 		void SubsPage(int page) override;
-		void ExecutePageSubs(std::list<int>& ref_list);
+		void ExecutePageSubs(std::vector<int>& ref_list);
 		void nextPagetoReplace(int page) override;
 	private:
-		std::list<std::pair<int, int>> list_of_pages_in_memory;
+		int framequantity;
+		std::unordered_map<int, int> map_of_pages_in_memory; // hash table para as paginas que "apontam" à uma etiqueta
 	};
 }
 

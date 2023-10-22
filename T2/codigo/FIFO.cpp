@@ -6,7 +6,7 @@ FIFO::FIFO(int pageframes){
 	setpageqtd(pageframes);
 }
 
-void FIFO::ExecutePageSubs(std::list<int>& ref_list){
+void FIFO::ExecutePageSubs(std::vector<int>& ref_list){
 	int pageframes = getpageqtd();
 
     for (int page : ref_list) {
