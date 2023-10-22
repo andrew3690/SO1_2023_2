@@ -6,10 +6,12 @@ FIFO::FIFO(int pageframes){
 	setpageqtd(pageframes);
 }
 
+FIFO::~FIFO() {}
+
 void FIFO::ExecutePageSubs(std::vector<int>& ref_list){
 	int pageframes = getpageqtd();
 
-    for (int page : ref_list) {
+    for (const int& page : ref_list) {
         // Verifica se a página de referência já está na fila de páginas
         if (!isPageInQueue(pageseq, page)) {
             // Se a fila estiver cheia, remova o elemento mais antigo (o primeiro)

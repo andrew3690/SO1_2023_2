@@ -41,7 +41,6 @@ int Simulador::Simulador::InputHandler(int agrc, char* file[]) {
 	std::string linha;
 	while(!arquivo.eof()){
 		std::getline(arquivo, linha);
-		std::cout << linha << std::endl;
 		addToQueue(linha); // Adiciona a linha a fila de referencias
 	}
 
@@ -60,7 +59,6 @@ void Simulador::Simulador::addToQueue(const std::string& newItem)
 }
 
 void Simulador::Simulador::Showresult() {
-	// TODO - implement Simulador::Showresult
 	std::cout << this->frameqtd <<" quadros" << "\n";
 	std::cout << this->filaDepgs.size() <<" refs" << "\n";
 	std::cout << "FIFO: " << fifo->getPagefaultqtd()<<" PFs" << "\n";
@@ -85,7 +83,9 @@ void Simulador::Simulador::Callalgorithm() {
 }
 
 Simulador::Simulador::~Simulador(){
-	// delete lru;
+	delete fifo;
+	delete lru;
+	delete opt;
 	std::cout << "Finalizando o simulador" <<std::endl; 
 }
 

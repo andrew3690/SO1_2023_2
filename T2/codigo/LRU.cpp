@@ -5,6 +5,8 @@ Simulador::LRU::LRU(int frameqtd) {
 	framequantity = frameqtd;
 }
 
+Simulador::LRU::~LRU() {}
+
 void Simulador::LRU::SubsPage(int page) {
 	// TODO - implement LRU::SubsPage
 	throw "Not yet implemented";
@@ -24,7 +26,7 @@ void Simulador::LRU::nextPagetoReplace(int page) {
 
 void Simulador::LRU::ExecutePageSubs(std::vector<int>& ref_list) {
 
-	for (int page : ref_list) {
+	for (const int& page : ref_list) {
 		// iterador para a posição de pagina, se encontrada na lista ordenada do algoritmo
 		if (ordered_list.empty()) {
 			ordered_list.push_front(page);

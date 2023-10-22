@@ -8,6 +8,7 @@ namespace Simulador {
 	class LRU: public SubsAlgorithm {
 		public:
 			LRU(int framequantity);
+			~LRU();
 			void UpdateFrame(int page) override;
 			void SubsPage(int page) override;
 			void nextPagetoReplace(int page) override;

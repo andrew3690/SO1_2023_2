@@ -12,6 +12,7 @@ namespace Simulador {
 	
 	public:
 		FIFO(int pageframes);
+		~FIFO();
 
 		/**
 		 * enfileira um item na fila de páginas
