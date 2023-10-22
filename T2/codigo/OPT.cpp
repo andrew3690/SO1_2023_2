@@ -20,7 +20,7 @@ void OPT::UpdateFrame(int page) {
 /* Retorna um registro de quando uma página (page) será referenciada no futuro -> sera a etiqueta*/
 int OPT::findNextReferenceOfPage(int page, int start, std::vector<int>& references) {
 	int lenght = 0;
-	for (int i = start+1; i<= references.size(); i++ ) {
+	for (int i = start+1; i < references.size(); i++ ) {
 		auto future_page = references[i];
 		if (future_page == page) {
 			return lenght;
@@ -34,7 +34,7 @@ int OPT::findNextReferenceOfPage(int page, int start, std::vector<int>& referenc
 /* Algoritmo principal para substituição de páginas -> itera sobre lista de referências de páginas */
 void OPT::ExecutePageSubs(std::vector<int>& to_be_referenced_pages) {
 	int increment = 0;
-	for (int& page: to_be_referenced_pages) {
+	for (const int& page: to_be_referenced_pages) {
 		int lenght_until_next_reference = findNextReferenceOfPage(page, increment, to_be_referenced_pages);
 
 		if (map_of_pages_in_memory.empty()) {
@@ -46,6 +46,7 @@ void OPT::ExecutePageSubs(std::vector<int>& to_be_referenced_pages) {
 			increment++;
 			continue;
 		}
+		decrementTimeUntilNextReference(); // atualiza as etiquetas
 		auto in_memory = map_of_pages_in_memory.find(page); // procura se pagina referenciada está na RAM
 
 		if (in_memory != map_of_pages_in_memory.end()) {
@@ -76,7 +77,7 @@ void OPT::nextPagetoReplace(int page) {
 	SubsPage(page_to_replace);
 }
 
-/* remove a pagina do argumento*/
+/* remove a pagina do parâmetro */
 void OPT::SubsPage(int page_to_replace) {
 	auto it = map_of_pages_in_memory.find(page_to_replace);
 
@@ -85,4 +86,11 @@ void OPT::SubsPage(int page_to_replace) {
 	} else {
 		std::cout << "erro ao remover\n";
 	}
+}
+
+/* atualiza a etiqueta de todas as paginas em menos 1 quando avança uma iteração no tempo -> antes de realizar a substituição */
+void OPT::decrementTimeUntilNextReference() {
+	for (auto& pair : map_of_pages_in_memory) {
+        map_of_pages_in_memory[pair.first] = pair.second - 1;
+    }
 }

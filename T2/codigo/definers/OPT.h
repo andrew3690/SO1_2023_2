@@ -18,6 +18,7 @@ namespace Simulador {
 		~OPT();
 
 		int findNextReferenceOfPage(int page, int start, std::vector<int>& references);
+		void decrementTimeUntilNextReference();
 		void UpdateFrame(int page) override;
 
 		void SubsPage(int page) override;
