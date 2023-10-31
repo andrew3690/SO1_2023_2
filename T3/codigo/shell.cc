@@ -1,5 +1,5 @@
-#include "fs.h"
-#include "disk.h"
+#include "definers/fs.h"
+#include "definers/disk.h"
 
 #include <stdio.h>
 #include <stdlib.h>
