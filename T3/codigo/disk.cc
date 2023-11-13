@@ -1,4 +1,4 @@
-#include "definers/disk.h"
+#include "disk.h"
 #include <unistd.h>
 
 Disk::Disk(const char *filename, int n)
