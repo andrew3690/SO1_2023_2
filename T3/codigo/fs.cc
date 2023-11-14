@@ -8,7 +8,6 @@ int INE5412_FS::fs_format()
 void INE5412_FS::fs_debug()
 {
     union fs_block block;
-
     disk->read(0, block.data);
 
     cout << "superblock:\n";
@@ -17,38 +16,35 @@ void INE5412_FS::fs_debug()
     cout << "    " << block.super.ninodeblocks << " inode blocks\n";
     cout << "    " << block.super.ninodes << " inodes\n";
 
+    // Iterar pelos inodes
     for (int i = 0; i < block.super.ninodes; ++i) {
-        fs_inode current_inode = block.inode[i];
+        disk->read(i / INODES_PER_BLOCK + 1, block.data); // Carrega o bloco de inodes
 
-        // Verificar se o inode está em uso
-        if (current_inode.isvalid) {
+        // Calcula o índice dentro do bloco de inodes
+        int inode_index = i % INODES_PER_BLOCK;
+
+        // Verifica se o índice do inode é válido
+        if (block.inode[inode_index].isvalid) {
             cout << "inode " << i << ":\n";
-            cout << "    size: " << current_inode.size << " bytes\n";
-            cout << "    direct blocks: ";
+            cout << "    size: " << block.inode[inode_index].size << " bytes\n";
+            cout << "    direct blocks:\n";
+
+            // Iterar pelos ponteiros diretos do inode
             for (int j = 0; j < POINTERS_PER_INODE; ++j) {
-                cout << current_inode.direct[j] << " ";
-            }
-            cout << "\n";
-
-            // Verificar se há um bloco indireto
-            if (current_inode.indirect) {
-                cout << "    indirect block: " << current_inode.indirect << "\n";
-                
-                // Lógica para ler o bloco indireto
-                union fs_block indirect_block;
-				
-                disk->read(current_inode.indirect, indirect_block.data);
-
-                // Exibir os ponteiros para os blocos de dados
-                cout << "    indirect block pointers: ";
-                for (int k = 0; k < disk->size(); ++k) {
-                    cout << indirect_block.pointers[k] << " ";
+                // Verificar se o ponteiro direto aponta para um bloco válido
+                if (block.inode[inode_index].direct[j] >= 0 && block.inode[inode_index].direct[j] < block.super.nblocks) {
+                    cout << "        " << block.inode[inode_index].direct[j] << "\n";
                 }
-                cout << "\n";
+            }
+
+            // Verificar se o ponteiro indireto aponta para um bloco válido
+            if (block.inode[inode_index].indirect >= 0 && block.inode[inode_index].indirect < block.super.nblocks) {
+                cout << "    indirect block: " << block.inode[inode_index].indirect << "\n";
             }
         }
     }
 }
+
 
 int INE5412_FS::fs_mount()
 {
