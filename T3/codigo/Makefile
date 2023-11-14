@@ -14,3 +14,6 @@ disk.o: disk.cc disk.h
 
 clean:
 	rm simplefs disk.o fs.o shell.o
+
+run:
+	./simplefs image.200 5
