@@ -31,20 +31,30 @@ void INE5412_FS::fs_debug()
             if (block.inode[inode_index].isvalid) {
                 cout << "inode " << i << ":\n";
                 cout << "    size: " << block.inode[inode_index].size << " bytes\n";
-                cout << "    direct blocks:\n";
+                cout << "    direct blocks: ";
 
                 // Iterar pelos ponteiros diretos do inode
                 for (int j = 0; j < POINTERS_PER_INODE; ++j) {
                     // Verificar se o ponteiro direto aponta para um bloco válido
-                    if (block.inode[inode_index].direct[j] >= 0 && block.inode[inode_index].direct[j] < nblocks) {
-                        cout << "        " << block.inode[inode_index].direct[j] << "\n";
+                    if (block.inode[inode_index].direct[j] > 0 && block.inode[inode_index].direct[j] < nblocks) {
+                        cout << block.inode[inode_index].direct[j] << " ";
                     }
                 }
+                cout << "\n";
 
                 // Verificar se o ponteiro indireto aponta para um bloco válido
-                if (block.inode[inode_index].indirect >= 0 && block.inode[inode_index].indirect < nblocks) {
+                if (block.inode[inode_index].indirect > 0 && block.inode[inode_index].indirect < nblocks) {
                     cout << "    indirect block: " << block.inode[inode_index].indirect << "\n";
+                    cout << "    indirect data blocks: ";
+                    union fs_block indirect;
+                    disk->read(block.inode[inode_index].indirect, indirect.data);
+                    for (int j = 0; j < POINTERS_PER_BLOCK; j++) {
+                        if (indirect.pointers[j] > 0 && indirect.pointers[j] < nblocks) {
+                            cout << indirect.pointers[j] << " " ;
+                        }
+                    }
                 }
+                cout << "\n";
             }
         }
     }
