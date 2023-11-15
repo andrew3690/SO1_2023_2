@@ -15,5 +15,11 @@ disk.o: disk.cc disk.h
 clean:
 	rm simplefs disk.o fs.o shell.o
 
-run:
-	./simplefs image.20 10
+run1:
+	./simplefs image.200 5
+
+run0:
+	./simplefs image.20 5
+
+run2:
+	./simplefs image.5 5
