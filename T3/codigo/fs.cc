@@ -2,7 +2,34 @@
 
 int INE5412_FS::fs_format()
 {
-	return 0;
+    if(this->fs_mount()){
+        cout << "Error: File system is already mounted!";
+        return 0;
+    }
+
+    // Calculo da quantidade de blocos para inodes(10%)
+    int inode_blocks = disk->size() * 0.1;
+
+    // Criacao dos dados do bloco
+    union fs_block block;
+    for(int i = 0; i < inode_blocks; ++i){
+        block.super.magic = FS_MAGIC;
+        block.super.nblocks = disk->size();
+        block.super.ninodeblocks = inode_blocks;
+        block.super.ninodes = INODES_PER_BLOCK * i;
+
+        disk->write(i + 1, block.data);
+    }
+
+    // Escreve o superbloco
+    block.super.magic = FS_MAGIC;
+    block.super.nblocks = disk->size();
+    block.super.ninodeblocks = inode_blocks;
+    block.super.ninodes = INODES_PER_BLOCK * inode_blocks;
+
+    disk->write(0, block.data);
+
+    return 1;
 }
 
 void INE5412_FS::fs_debug()
