@@ -18,14 +18,14 @@ int INE5412_FS::fs_format()
 
     // Criacao dos dados do bloco
     union fs_block block;
-    for(int i = 0; i < inode_blocks; ++i){
-        block.super.magic = FS_MAGIC;
-        block.super.nblocks = disk->size();
-        block.super.ninodeblocks = inode_blocks;
-        block.super.ninodes = INODES_PER_BLOCK * i;
+    // for(int i = 0; i < inode_blocks; ++i){
+    //     block.super.magic = FS_MAGIC;
+    //     block.super.nblocks = disk->size();
+    //     block.super.ninodeblocks = inode_blocks;
+    //     block.super.ninodes = INODES_PER_BLOCK * i;
 
-        disk->write(i + 1, block.data);
-    }
+    //     disk->write(i + 1, block.data);
+    // }
 
     // Escreve o superbloco
     block.super.magic = FS_MAGIC;
@@ -79,18 +79,27 @@ void INE5412_FS::fs_debug()
                 if (block.inode[inode_index].indirect > 0 && block.inode[inode_index].indirect < nblocks) {
                     cout << "    indirect block: " << block.inode[inode_index].indirect << "\n";
                     cout << "    indirect data blocks: ";
-                    union fs_block indirect;
-                    disk->read(block.inode[inode_index].indirect, indirect.data);
-                    for (int j = 0; j < POINTERS_PER_BLOCK; j++) {
-                        if (indirect.pointers[j] > 0 && indirect.pointers[j] < nblocks) {
-                            cout << indirect.pointers[j] << " " ;
-                        }
+                    for (auto& pointer: find_indirect_blocks(block, inode_index, nblocks)) {
+                        cout << pointer << " ";
                     }
                 }
                 cout << "\n";
             }
         }
     }
+}
+
+vector<int> INE5412_FS::find_indirect_blocks(fs_block block, int inode_index, int nblocks)
+{
+    union fs_block indirect;
+    vector<int> block_pointers;
+    disk->read(block.inode[inode_index].indirect, indirect.data);
+    for (int j = 0; j < POINTERS_PER_BLOCK; j++) {
+        if (indirect.pointers[j] > 0 && indirect.pointers[j] < nblocks) {
+            block_pointers.push_back(indirect.pointers[j]);
+        }
+    }
+    return block_pointers;
 }
 
 
@@ -111,19 +120,23 @@ int INE5412_FS::fs_mount() {
     }
 
     // Inicializar o mapa de bits dos blocos livres/ocupados
-    initialize_block_bitmap(block.super.nblocks);
+    initialize_block_bitmap(block.super.nblocks, block.super.ninodeblocks);
 
     mounted = true;
     
     return 1; // Retornar um para indicar sucesso na montagem do sistema de arquivos
 }
 
-void INE5412_FS::initialize_block_bitmap(int nblocks)
+void INE5412_FS::initialize_block_bitmap(int nblocks, int ninodeblocks)
 {
     // Determinar o número total de blocos no disco
     int total_blocks = disk->size();
     // Inicializar o vetor do mapa de bits com todos os blocos livres
     block_bitmap.resize(total_blocks, 0); // Inicializa todos os blocos como livres (0)
+    block_bitmap[0] = 1;
+    // for (int i = 1; i < ninodeblocks+1; i++) {
+
+    // }
 }
 
 int INE5412_FS::fs_create()

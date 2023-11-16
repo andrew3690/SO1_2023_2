@@ -59,7 +59,9 @@ private:
     std::vector<int> block_bitmap;
 
     // metodo de incializacao do mapa de bits
-    void initialize_block_bitmap(int nblocks);
+    void initialize_block_bitmap(int nblocks, int ninodeblocks);
+
+    vector<int> find_indirect_blocks(fs_block block, int index, int n_of_blocks);
 };
 
 #endif
