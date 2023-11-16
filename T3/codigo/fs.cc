@@ -2,7 +2,7 @@
 
 int INE5412_FS::fs_format()
 {
-    if(this->fs_mount()){
+    if(mounted){
         cout << "Error: File system is already mounted! \n";
         return 0;
     }
@@ -90,8 +90,8 @@ void INE5412_FS::fs_debug()
 
 int INE5412_FS::fs_mount() {
     // Inserir aqui uma verificacao se o sistema de arquivos já está montado
-    if(mounted == false){
-        return 0; // se a flag de montagem de arquivos for falsa, o sistema jah foi montado
+    if(mounted == true){
+        return 0; // se a flag de montagem de arquivos for verdade, o sistema jah foi montado
     }
 
     // Ler o superbloco para obter informações sobre o sistema de arquivos
@@ -105,13 +105,20 @@ int INE5412_FS::fs_mount() {
     }
 
     // Inicializar o mapa de bits dos blocos livres/ocupados
-    initialize_block_bitmap();
+    initialize_block_bitmap(block.super.nblocks);
 
     mounted = true;
     
     return 1; // Retornar um para indicar sucesso na montagem do sistema de arquivos
 }
 
+void INE5412_FS::initialize_block_bitmap(int nblocks)
+{
+    // Determinar o número total de blocos no disco
+    int total_blocks = disk->size();
+    // Inicializar o vetor do mapa de bits com todos os blocos livres
+    block_bitmap.resize(total_blocks, 0); // Inicializa todos os blocos como livres (0)
+}
 
 int INE5412_FS::fs_create()
 {
