@@ -133,10 +133,43 @@ void INE5412_FS::initialize_block_bitmap(int nblocks, int ninodeblocks)
     int total_blocks = disk->size();
     // Inicializar o vetor do mapa de bits com todos os blocos livres
     block_bitmap.resize(total_blocks, 0); // Inicializa todos os blocos como livres (0)
-    block_bitmap[0] = 1;
-    // for (int i = 1; i < ninodeblocks+1; i++) {
+    block_bitmap[0] = 1; // coloca o superbloco como ocupado
 
-    // }
+    union fs_block block;
+
+    for (int inode_block = 1; inode_block < ninodeblocks+1; inode_block++) {
+        disk->read(inode_block, block.data); // Carrega o bloco de inodes
+
+        block_bitmap[inode_block] = 1;
+
+        // Iterar pelos inodes
+        for (int i = 0; i < INODES_PER_BLOCK; ++i) {
+
+            // Calcula o índice dentro do bloco de inodes
+            int inode_index = i % INODES_PER_BLOCK;
+
+            // Verifica se o índice do inode é válido
+            if (block.inode[inode_index].isvalid == 1) {
+
+                block_bitmap[block.inode[inode_index].indirect] = 1; //bloco indireto de ponteiros em uso
+
+                // Iterar pelos ponteiros diretos do inode
+                for (int j = 0; j < POINTERS_PER_INODE; ++j) {
+                    if (block.inode[inode_index].direct[j] > 0 && block.inode[inode_index].direct[j] < nblocks) {
+                        int direct_block = block.inode[inode_index].direct[j];
+                        block_bitmap[direct_block] = 1;
+                    }
+                }
+
+                // Verificar se o ponteiro indireto aponta para um bloco válido
+                if (block.inode[inode_index].indirect > 0 && block.inode[inode_index].indirect < nblocks) {
+                    for (auto& pointer: find_indirect_blocks(block, inode_index, nblocks)) {
+                        block_bitmap[pointer] = 1;
+                    }
+                }
+            }
+        }
+    }
 }
 
 int INE5412_FS::fs_create()
