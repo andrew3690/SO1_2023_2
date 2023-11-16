@@ -16,4 +16,4 @@ clean:
 	rm simplefs disk.o fs.o shell.o
 
 run:
-	./simplefs image.200 5
+	./simplefs image.20 10

@@ -3,7 +3,7 @@
 int INE5412_FS::fs_format()
 {
     if(this->fs_mount()){
-        cout << "Error: File system is already mounted!";
+        cout << "Error: File system is already mounted! \n";
         return 0;
     }
 
@@ -88,10 +88,30 @@ void INE5412_FS::fs_debug()
 }
 
 
-int INE5412_FS::fs_mount()
-{
-	return 0;
+int INE5412_FS::fs_mount() {
+    // Inserir aqui uma verificacao se o sistema de arquivos já está montado
+    if(mounted == false){
+        return 0; // se a flag de montagem de arquivos for falsa, o sistema jah foi montado
+    }
+
+    // Ler o superbloco para obter informações sobre o sistema de arquivos
+    union fs_block block;
+    disk->read(0, block.data);
+
+    // Verificar se o magic number é válido para confirmar a presença de um sistema de arquivos
+    if (block.super.magic != FS_MAGIC) {
+        // O magic number é inválido, indicando que não há sistema de arquivos montado
+        return 0; // Retornar zero para indicar falha na montagem do sistema de arquivos
+    }
+
+    // Inicializar o mapa de bits dos blocos livres/ocupados
+    initialize_block_bitmap();
+
+    mounted = true;
+    
+    return 1; // Retornar um para indicar sucesso na montagem do sistema de arquivos
 }
+
 
 int INE5412_FS::fs_create()
 {

@@ -2,7 +2,7 @@
 #define FS_H
 
 #include "disk.h"
-
+#include <vector>
 class INE5412_FS
 {
 public:
@@ -54,6 +54,17 @@ public:
 
 private:
     Disk *disk;
+    bool mounted;
+    // vetor de mapa de bits
+    std::vector<bool> block_bitmap;
+
+    // metodo de incializacao do mapa de bits
+    void initialize_block_bitmap() {
+        // Determinar o número total de blocos no disco
+        int total_blocks = disk->size();
+        // Inicializar o vetor do mapa de bits com todos os blocos livres
+        block_bitmap.resize(total_blocks, true); // Inicializa todos os blocos como livres (true)
+    }
 };
 
 #endif
