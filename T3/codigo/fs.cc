@@ -7,6 +7,12 @@ int INE5412_FS::fs_format()
         return 0;
     }
 
+    // formata o disco, apagando tudo nele
+    const char formatted_data[4096] = {0};
+    for (int block_id = 0; block_id < disk->size(); block_id++) {
+        disk->write(block_id, formatted_data);
+    }
+
     // Calculo da quantidade de blocos para inodes(10%)
     int inode_blocks = disk->size() * 0.1;
 
@@ -55,7 +61,7 @@ void INE5412_FS::fs_debug()
             int inode_index = i % INODES_PER_BLOCK;
 
             // Verifica se o índice do inode é válido
-            if (block.inode[inode_index].isvalid) {
+            if (block.inode[inode_index].isvalid == 1) {
                 cout << "inode " << i << ":\n";
                 cout << "    size: " << block.inode[inode_index].size << " bytes\n";
                 cout << "    direct blocks: ";
