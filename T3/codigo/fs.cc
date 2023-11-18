@@ -1,4 +1,5 @@
 #include "fs.h"
+#include <cmath>
 
 int INE5412_FS::fs_format()
 {
@@ -115,7 +116,7 @@ int INE5412_FS::fs_mount() {
 
     // Verificar se o magic number é válido para confirmar a presença de um sistema de arquivos
     if (block.super.magic != FS_MAGIC) {
-        // O magic number é inválido, indicando que não há sistema de arquivos montado
+        // O magic number é inválido, indicando que não há sistema de arquivos formatado
         return 0; // Retornar zero para indicar falha na montagem do sistema de arquivos
     }
 
@@ -174,26 +175,33 @@ void INE5412_FS::initialize_block_bitmap(int nblocks, int ninodeblocks)
 
 int INE5412_FS::fs_create()
 {
+    if (!mounted) {
+        return 0;
+    }
 	// Realiza leitura do superbloco para obter informacoes sobre o sistema de arquivos
     union fs_block block;
     disk->read(0, block.data);
 
     // Encontrar um inode livre
-    int free_inode = find_free_inode(block);
-    if(free_inode == -1){
+    int inumber = find_free_inode(&block, block.super.ninodeblocks);
+
+    if(inumber == -1){
         //  Nao ha inodes livres disponiveis
+        cout << "sem espaço para inodes disponivel\n";
         return 0;
     }
 
     // Marcar o inode como valido e com tamanho zero
-    block.inode[free_inode].isvalid = 1;
-    block.inode[free_inode].size = 0;
-    
-    // Escrtita o bloco de inodes de volta no disoc para slaver as alteracoes
-    disk->write(inode_block_number(free_inode), block.data);
+    block.inode[inumber].isvalid = 1;
+    block.inode[inumber].size = 0;
+
+    // Escreve o bloco de inodes de volta no disco para salvar as alteracoes
+    inode_save(inumber, block.inode[inumber]);
+
+    //disk->write(inode_block_number(free_inode), block.data);
 
     // retorna o numero inode criado
-    return free_inode + 1;
+    return inumber + 1;
     
 }
 
@@ -264,4 +272,31 @@ int INE5412_FS::fs_read(int inumber, char *data, int length, int offset)
 int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
 {
 	return 0;
+}
+
+int INE5412_FS::find_free_inode(fs_block *block, int ninodeblocks)
+{
+    int inumber = -1;
+    for (int blocks = 1; blocks < ninodeblocks + 1; blocks++) {
+        disk->read(blocks, block->data);
+        for (int i = 0; i < INODES_PER_BLOCK; i++) {
+            inumber++;
+            int index = i % INODES_PER_BLOCK;
+            if (block->inode[index].isvalid != 1) {
+                return inumber;
+            }
+        }
+    }
+    return -1;
+}
+
+void INE5412_FS::inode_save(int inumber, fs_inode inode)
+{
+    int disk_block = floor(inumber/INODES_PER_BLOCK) + 1;
+    union fs_block block;
+
+    disk->read(disk_block, block.data);
+    block.inode[inumber % INODES_PER_BLOCK] = inode;
+    disk->write(disk_block, block.data);
+
 }

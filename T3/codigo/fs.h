@@ -61,6 +61,11 @@ private:
     // metodo de incializacao do mapa de bits
     void initialize_block_bitmap(int nblocks, int ninodeblocks);
 
+    void inode_load(int inumber, fs_inode inode);
+    void inode_save(int inumber, fs_inode inode);
+
+    int find_free_inode(union fs_block *block, int ninodeblocks);
+
     vector<int> find_indirect_blocks(fs_block block, int index, int n_of_blocks);
 };
 
