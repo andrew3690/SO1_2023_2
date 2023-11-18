@@ -174,17 +174,86 @@ void INE5412_FS::initialize_block_bitmap(int nblocks, int ninodeblocks)
 
 int INE5412_FS::fs_create()
 {
-	return 0;
+	// Realiza leitura do superbloco para obter informacoes sobre o sistema de arquivos
+    union fs_block block;
+    disk->read(0, block.data);
+
+    // Encontrar um inode livre
+    int free_inode = find_free_inode(block);
+    if(free_inode == -1){
+        //  Nao ha inodes livres disponiveis
+        return 0;
+    }
+
+    // Marcar o inode como valido e com tamanho zero
+    block.inode[free_inode].isvalid = 1;
+    block.inode[free_inode].size = 0;
+    
+    // Escrtita o bloco de inodes de volta no disoc para slaver as alteracoes
+    disk->write(inode_block_number(free_inode), block.data);
+
+    // retorna o numero inode criado
+    return free_inode + 1;
+    
 }
 
 int INE5412_FS::fs_delete(int inumber)
 {
-	return 0;
+	fs_inode target_inode;
+
+    disk->read(inumber / INODES_PER_BLOCK + 1, (char*)&target_inode);
+
+    if(target_inode.isvalid != 1){
+        return 0;
+    }
+
+    // libreracao dos blocos diretos
+    for(int i = 0; i < POINTERS_PER_BLOCK; ++i){
+        if(target_inode.direct[i] != -1){
+        // Marca o bloco como livre
+        free_blocks->set(target_inode.direct[i], false);
+        }
+    }
+
+    // libera o bloco indireto se existir
+    if(target_inode.indirect != -1){
+        // le o bloco indireto
+        int indirect_block[POINTERS_PER_BLOCK];
+        disk->read(target_inode.indirect, (char*)&indirect_block);
+
+        // libera os blocos apontados pelo bloco indireto
+        for(int i = 0; i < POINTERS_PER_BLOCK; ++i){
+            if(indirect_block[i] != -1){
+                free_blocks->set(indirect_block[i], false);
+            }
+        }
+
+        // libera o bloco indireto
+        free_blocks->set(target_inode.indirect, false);
+    }
+
+    // marca o inode como invalido e retorna ao mapa de inodes livres
+    target_inode.isvalid = 0;
+    disk->write(inumber/INODES_PER_BLOCK + 1, (char*)&target_inode);
+
+    return 1; // Scesso na delecao do bloco
+
 }
 
 int INE5412_FS::fs_getsize(int inumber)
 {
-	return -1;
+    fs_inode target_inode;
+
+    // Realiza leitura do inode
+    disk->read(inumber/ INODES_PER_BLOCK + 1, (char*)&target_inode);
+
+    // verifica a validade do inode
+    if(target_inode.isvalid != 1){
+        // inode invalido, retorna falha
+        return -1;
+    }
+    // retorna o tamanho do inode
+    return target_inode.size;
 }
 
 int INE5412_FS::fs_read(int inumber, char *data, int length, int offset)
