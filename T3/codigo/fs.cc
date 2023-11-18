@@ -207,42 +207,42 @@ int INE5412_FS::fs_create()
 
 int INE5412_FS::fs_delete(int inumber)
 {
-	fs_inode target_inode;
+	// fs_inode target_inode;
 
-    disk->read(inumber / INODES_PER_BLOCK + 1, (char*)&target_inode);
+    // disk->read(inumber / INODES_PER_BLOCK + 1, (char*)&target_inode);
 
-    if(target_inode.isvalid != 1){
-        return 0;
-    }
+    // if(target_inode.isvalid != 1){
+    //     return 0;
+    // }
 
-    // libreracao dos blocos diretos
-    for(int i = 0; i < POINTERS_PER_BLOCK; ++i){
-        if(target_inode.direct[i] != -1){
-        // Marca o bloco como livre
-        free_blocks->set(target_inode.direct[i], false);
-        }
-    }
+    // // libreracao dos blocos diretos
+    // for(int i = 0; i < POINTERS_PER_BLOCK; ++i){
+    //     if(target_inode.direct[i] != -1){
+    //     // Marca o bloco como livre
+    //     free_blocks->set(target_inode.direct[i], false);
+    //     }
+    // }
 
-    // libera o bloco indireto se existir
-    if(target_inode.indirect != -1){
-        // le o bloco indireto
-        int indirect_block[POINTERS_PER_BLOCK];
-        disk->read(target_inode.indirect, (char*)&indirect_block);
+    // // libera o bloco indireto se existir
+    // if(target_inode.indirect != -1){
+    //     // le o bloco indireto
+    //     int indirect_block[POINTERS_PER_BLOCK];
+    //     disk->read(target_inode.indirect, (char*)&indirect_block);
 
-        // libera os blocos apontados pelo bloco indireto
-        for(int i = 0; i < POINTERS_PER_BLOCK; ++i){
-            if(indirect_block[i] != -1){
-                free_blocks->set(indirect_block[i], false);
-            }
-        }
+    //     // libera os blocos apontados pelo bloco indireto
+    //     for(int i = 0; i < POINTERS_PER_BLOCK; ++i){
+    //         if(indirect_block[i] != -1){
+    //             free_blocks->set(indirect_block[i], false);
+    //         }
+    //     }
 
-        // libera o bloco indireto
-        free_blocks->set(target_inode.indirect, false);
-    }
+    //     // libera o bloco indireto
+    //     free_blocks->set(target_inode.indirect, false);
+    // }
 
-    // marca o inode como invalido e retorna ao mapa de inodes livres
-    target_inode.isvalid = 0;
-    disk->write(inumber/INODES_PER_BLOCK + 1, (char*)&target_inode);
+    // // marca o inode como invalido e retorna ao mapa de inodes livres
+    // target_inode.isvalid = 0;
+    // disk->write(inumber/INODES_PER_BLOCK + 1, (char*)&target_inode);
 
     return 1; // Scesso na delecao do bloco
 
@@ -266,7 +266,34 @@ int INE5412_FS::fs_getsize(int inumber)
 
 int INE5412_FS::fs_read(int inumber, char *data, int length, int offset)
 {
-	return 0;
+    if (!mounted) {
+        return 0;
+    }
+    vector<char> inode_content;
+    int read_bytes = 0;
+
+    fs_inode inode;
+    inode_load(inumber, inode);
+    if (inode.isvalid != 1) {
+        return 0;
+    }
+
+
+    union fs_block block;
+    for(auto& direct_ptr: inode.direct) {
+        if (direct_ptr > 0) {
+            disk->read(direct_ptr, block.data);
+            for (auto& byte: block.data) {
+                inode_content.push_back(byte);
+            }
+        }
+    }
+    for (long unsigned int i = 0 + offset; i < inode_content.size(); i++) {
+        read_bytes++;
+        data[i] = inode_content[i];
+    }
+
+	return read_bytes;
 }
 
 int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
@@ -288,6 +315,15 @@ int INE5412_FS::find_free_inode(fs_block *block, int ninodeblocks)
         }
     }
     return -1;
+}
+
+void INE5412_FS::inode_load(int inumber, fs_inode &inode)
+{
+    int disk_block = floor(inumber/INODES_PER_BLOCK) + 1;
+    union fs_block block;
+
+    disk->read(disk_block, block.data);
+    inode = block.inode[inumber % INODES_PER_BLOCK];
 }
 
 void INE5412_FS::inode_save(int inumber, fs_inode inode)
