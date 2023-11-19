@@ -35,24 +35,35 @@ public:
             char data[Disk::DISK_BLOCK_SIZE];
     };
 
-    // classe de blocos livres
-    class Freeblocks{
-        private:
-            std::vector<bool> blockMap; // vetor de booleanos para representar blocos livres
-        
-        public:
-            Freeblocks(int nblocks): blockMap(nblocks, true) {} // Inicializa todos os blocos
+    // Classe de blocos livres
+    class Freeblocks {
+    private:
+        std::vector<bool> blockMap; // Vetor de booleanos para representar blocos livres
 
-            // Marca o bloco como livre
-            void set(int blockNum, bool freeStatus){
-                blockMap[blockNum] = freeStatus;
-            }
+    public:
+        Freeblocks(int nblocks) : blockMap(nblocks, true) {} // Inicializa todos os blocos
 
-            // verifica se o bloco esta livre
-            bool  isFree(int blockNum){
-                return blockMap[blockNum];
+        // Marca o bloco como livre
+        void set(int blockNum, bool freeStatus) {
+            blockMap[blockNum] = freeStatus;
+        }
+
+        // Verifica se o bloco está livre
+        bool isFree(int blockNum) {
+            return blockMap[blockNum];
+        }
+
+        // Obtém o estado de um bloco específico
+        bool get(int blockNum) {
+            if (blockNum < 0 || blockNum >= blockMap.size()) {
+                // Caso o bloco solicitado seja inválido, retorna false ou uma flag indicando erro
+                // Aqui, estou retornando false para indicar que o bloco está ocupado ou inválido
+                return false;
             }
+            return blockMap[blockNum];
+        }
     };
+
 
 public:
 
@@ -94,7 +105,7 @@ private:
     
     // metedo de obtencao do numero do bloco do inode
     int inode_block_number(int number);
-
+    int find_free_block();
 
 };
 

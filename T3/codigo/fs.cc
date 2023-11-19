@@ -177,8 +177,7 @@ void INE5412_FS::initialize_block_bitmap(int nblocks, int ninodeblocks)
     }
 }
 
-int INE5412_FS::fs_create()
-{
+int INE5412_FS::fs_create() {
     if (!mounted) {
         return 0;
     }
@@ -320,7 +319,55 @@ int INE5412_FS::fs_read(int inumber, char *data, int length, int offset)
 
 int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
 {
-	return 0;
+    // Realiza leitura do inode
+    fs_inode target_inode;
+    disk->read(inumber / INODES_PER_BLOCK + 1,(char*)&target_inode);
+
+    // verifica se o inode eh valido
+    if (target_inode.isvalid != 1 || offset < 0){
+        return 0; // inode ou deslocamento invalidos, retornando falha
+    }
+
+    int bytesw = 0; // contador de bytes escritos
+
+    // calculo do numero de blocos necessarios com base no deslocamento e no comprimento do bloco
+    int startBlock = offset / Disk::DISK_BLOCK_SIZE;
+    int endblock = (offset + length) / Disk::DISK_BLOCK_SIZE;
+
+    // loop que escreve em blocos diretos
+    for(int i = startBlock; i <= endblock; ++i){
+        // enquanto os contador estiver menor que a quantiodade de ponteiros por inode
+        if(i < POINTERS_PER_INODE){
+            // Aqui verifica se o bloco direto estah alocado
+            if(target_inode.direct[i] == -1){
+                // se sim aloca um novo bloco direto
+                int newblock = find_free_block();
+                if (newblock == -1){
+                // se nao, que dizer que nao ha blocos livres, retornando o numero de bytes escritos ate o momento
+                    return bytesw;
+                }
+                target_inode.direct[i] = newblock;
+            }
+            // Escreve os dados no bloco
+            int blockOffset = offset % Disk::DISK_BLOCK_SIZE;
+            int bytesToWrite = std::min(Disk::DISK_BLOCK_SIZE - blockOffset, length - bytesw);
+            
+            disk->write(target_inode.direct[i], data + bytesw);
+            bytesw += bytesToWrite;
+        } else {
+            // Lógica para blocos indiretos, ainda tenho que pensar nessa parte
+        }
+    }
+
+    // Atualiza o tamanho do inode, se necessário
+    if (offset + bytesw > target_inode.size) {
+        target_inode.size = offset + bytesw;
+    }
+
+    // Escreve o inode de volta no disco
+    disk->write(inumber / INODES_PER_BLOCK + 1, (char*)&target_inode);
+
+    return bytesw; // Retorna o número de bytes escritos
 }
 
 int INE5412_FS::find_free_inode(fs_block *block, int ninodeblocks)
@@ -357,4 +404,21 @@ void INE5412_FS::inode_save(int inumber, fs_inode inode)
     block.inode[inumber % INODES_PER_BLOCK] = inode;
     disk->write(disk_block, block.data);
 
+}
+
+int INE5412_FS::find_free_block() {
+    // obtem o tamanho do disco
+    int numBlocks = disk->size();
+
+    // Verifica cada bloco no mapa de bits
+    for (int block = 0; block < numBlocks; ++block) {
+        // se o bloco nao esta sendo usado
+        if (!free_blocks->get(block)) {
+            free_blocks->set(block, true); // Marca o bloco como usado
+            // retorna o bloco
+            return block;
+        }
+    }
+
+    return -1; // Retorna -1 se não encontrar blocos livres
 }
