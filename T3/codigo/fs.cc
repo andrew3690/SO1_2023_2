@@ -80,7 +80,7 @@ void INE5412_FS::fs_debug()
                 if (block.inode[inode_index].indirect > 0 && block.inode[inode_index].indirect < nblocks) {
                     cout << "    indirect block: " << block.inode[inode_index].indirect << "\n";
                     cout << "    indirect data blocks: ";
-                    for (auto& pointer: find_indirect_blocks(block, inode_index, nblocks)) {
+                    for (auto& pointer: find_indirect_blocks(block.inode[inode_index].indirect, nblocks)) {
                         cout << pointer << " ";
                     }
                 }
@@ -90,11 +90,12 @@ void INE5412_FS::fs_debug()
     }
 }
 
-vector<int> INE5412_FS::find_indirect_blocks(fs_block block, int inode_index, int nblocks)
+/* Retorna um vetor com os indices dos blocos de dados apontados pelo bloco de ponteiros indiretos */
+vector<int> INE5412_FS::find_indirect_blocks(int indirect_block, int nblocks)
 {
     union fs_block indirect;
     vector<int> block_pointers;
-    disk->read(block.inode[inode_index].indirect, indirect.data);
+    disk->read(indirect_block, indirect.data);
     for (int j = 0; j < POINTERS_PER_BLOCK; j++) {
         if (indirect.pointers[j] > 0 && indirect.pointers[j] < nblocks) {
             block_pointers.push_back(indirect.pointers[j]);
@@ -119,6 +120,9 @@ int INE5412_FS::fs_mount() {
         // O magic number é inválido, indicando que não há sistema de arquivos formatado
         return 0; // Retornar zero para indicar falha na montagem do sistema de arquivos
     }
+
+    number_of_blocks = block.super.nblocks;
+    number_of_inode_blocks = block.super.ninodeblocks;
 
     // Inicializar o mapa de bits dos blocos livres/ocupados
     initialize_block_bitmap(block.super.nblocks, block.super.ninodeblocks);
@@ -164,7 +168,7 @@ void INE5412_FS::initialize_block_bitmap(int nblocks, int ninodeblocks)
 
                 // Verificar se o ponteiro indireto aponta para um bloco válido
                 if (block.inode[inode_index].indirect > 0 && block.inode[inode_index].indirect < nblocks) {
-                    for (auto& pointer: find_indirect_blocks(block, inode_index, nblocks)) {
+                    for (auto& pointer: find_indirect_blocks(block.inode[inode_index].indirect, nblocks)) {
                         block_bitmap[pointer] = 1;
                     }
                 }
@@ -267,19 +271,22 @@ int INE5412_FS::fs_getsize(int inumber)
 int INE5412_FS::fs_read(int inumber, char *data, int length, int offset)
 {
     if (!mounted) {
+        cout << "disco não está montado!\n";
         return 0;
     }
+
     vector<char> inode_content;
     int read_bytes = 0;
 
     fs_inode inode;
-    inode_load(inumber, inode);
+    inode_load(inumber, inode); // carrega as informações do inode a partir do inumber
     if (inode.isvalid != 1) {
         return 0;
     }
 
-
     union fs_block block;
+
+    // itera pelos blocos diretos do inode, e lê o conteudo
     for(auto& direct_ptr: inode.direct) {
         if (direct_ptr > 0) {
             disk->read(direct_ptr, block.data);
@@ -288,9 +295,24 @@ int INE5412_FS::fs_read(int inumber, char *data, int length, int offset)
             }
         }
     }
+
+    // itera pelos ponteiros no bloco indireto do inode
+    for (auto& data_block: find_indirect_blocks(inode.indirect, number_of_blocks)) {
+        if (data_block > 0) {
+            disk->read(data_block, block.data);
+            for (auto& byte: block.data) {
+                inode_content.push_back(byte);
+            }
+        }
+    }
+
+    //copia a partir do offset o conteudo do inode no buffer
     for (long unsigned int i = 0 + offset; i < inode_content.size(); i++) {
+        if (read_bytes == 16384) {
+            break;
+        }
         read_bytes++;
-        data[i] = inode_content[i];
+        data[i-offset] = inode_content[i];
     }
 
 	return read_bytes;

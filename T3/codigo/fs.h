@@ -57,6 +57,8 @@ private:
     bool mounted = false;
     // vetor de mapa de bits
     std::vector<int> block_bitmap;
+    int number_of_blocks = 0;
+    int number_of_inode_blocks = 0;
 
     // metodo de incializacao do mapa de bits
     void initialize_block_bitmap(int nblocks, int ninodeblocks);
@@ -66,7 +68,7 @@ private:
 
     int find_free_inode(union fs_block *block, int ninodeblocks);
 
-    vector<int> find_indirect_blocks(fs_block block, int index, int n_of_blocks);
+    vector<int> find_indirect_blocks(int indirect_block, int n_of_blocks);
 };
 
 #endif
