@@ -35,6 +35,25 @@ public:
             char data[Disk::DISK_BLOCK_SIZE];
     };
 
+    // classe de blocos livres
+    class Freeblocks{
+        private:
+            std::vector<bool> blockMap; // vetor de booleanos para representar blocos livres
+        
+        public:
+            Freeblocks(int nblocks): blockMap(nblocks, true) {} // Inicializa todos os blocos
+
+            // Marca o bloco como livre
+            void set(int blockNum, bool freeStatus){
+                blockMap[blockNum] = freeStatus;
+            }
+
+            // verifica se o bloco esta livre
+            bool  isFree(int blockNum){
+                return blockMap[blockNum];
+            }
+    };
+
 public:
 
     INE5412_FS(Disk *d) {
@@ -51,24 +70,32 @@ public:
 
     int  fs_read(int inumber, char *data, int length, int offset);
     int  fs_write(int inumber, const char *data, int length, int offset);
+    void inode_load(int inumber, fs_inode &inode);
+    void inode_save(int inumber, fs_inode inode);
+    int find_free_inode(fs_block *block, int ninodeblocks);
+    vector<int> find_indirect_blocks(int indirect_block, int nblocks);
 
 private:
     Disk *disk;
+    Freeblocks *free_blocks;
     bool mounted = false;
+
     // vetor de mapa de bits
     std::vector<int> block_bitmap;
-    int number_of_blocks = 0;
-    int number_of_inode_blocks = 0;
 
     // metodo de incializacao do mapa de bits
     void initialize_block_bitmap(int nblocks, int ninodeblocks);
+    
+    //metdo que acha os blocos indiretos
+    // vector<int> find_indirect_blocks(fs_block block, int index, int n_of_blocks);
+    
+    // metodo que acha os inodes livres
+    // int find_free_inode(union fs_block& block);
+    
+    // metedo de obtencao do numero do bloco do inode
+    int inode_block_number(int number);
 
-    void inode_load(int inumber, fs_inode &inode);
-    void inode_save(int inumber, fs_inode inode);
 
-    int find_free_inode(union fs_block *block, int ninodeblocks);
-
-    vector<int> find_indirect_blocks(int indirect_block, int n_of_blocks);
 };
 
 #endif
