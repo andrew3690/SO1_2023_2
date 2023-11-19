@@ -54,7 +54,7 @@ public:
         }
 
         // Obtém o estado de um bloco específico
-        bool get(int blockNum) {
+        bool get(long unsigned int blockNum) {
             if (blockNum < 0 || blockNum >= blockMap.size()) {
                 // Caso o bloco solicitado seja inválido, retorna false ou uma flag indicando erro
                 // Aqui, estou retornando false para indicar que o bloco está ocupado ou inválido
@@ -90,9 +90,11 @@ private:
     Disk *disk;
     Freeblocks *free_blocks;
     bool mounted = false;
+    int number_of_blocks = 0;
+    int number_of_inode_blocks = 0;
 
     // vetor de mapa de bits
-    std::vector<int> block_bitmap;
+    std::vector<int> block_bitmap {0};
 
     // metodo de incializacao do mapa de bits
     void initialize_block_bitmap(int nblocks, int ninodeblocks);

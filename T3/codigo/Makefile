@@ -16,10 +16,10 @@ clean:
 	rm simplefs disk.o fs.o shell.o
 
 run1:
-	./simplefs image.200 40
+	./simplefs image.200 200
 
 run0:
-	./simplefs image.20 10
+	./simplefs image.20 20
 
 run2:
 	./simplefs image.5 5
