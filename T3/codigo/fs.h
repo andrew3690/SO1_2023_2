@@ -35,52 +35,24 @@ public:
             char data[Disk::DISK_BLOCK_SIZE];
     };
 
-    // Classe de blocos livres
-    class Freeblocks {
-    private:
-        std::vector<bool> blockMap; // Vetor de booleanos para representar blocos livres
-
-    public:
-        Freeblocks(int nblocks) : blockMap(nblocks, true) {} // Inicializa todos os blocos
-
-        // Marca o bloco como livre
-        void set(int blockNum, bool freeStatus) {
-            blockMap[blockNum] = freeStatus;
-        }
-
-        // Verifica se o bloco está livre
-        bool isFree(int blockNum) {
-            return blockMap[blockNum];
-        }
-
-        // Obtém o estado de um bloco específico
-        bool get(int blockNum) {
-            if (blockNum < 0 || blockNum >= blockMap.size()) {
-                // Caso o bloco solicitado seja inválido, retorna false ou uma flag indicando erro
-                // Aqui, estou retornando false para indicar que o bloco está ocupado ou inválido
-                return false;
-            }
-            return blockMap[blockNum];
-        }
-    };
-
-
 public:
 
     INE5412_FS(Disk *d) {
         disk = d;
     } 
 
-    void fs_debug();
-    int  fs_format();
-    int  fs_mount();
+    void fs_debug(); // ok
+    int  fs_format(); // ok
+    int  fs_mount(); // ok
 
-    int  fs_create();
-    int  fs_delete(int inumber);
-    int  fs_getsize(int inumber);
+    int  fs_create(); // ok
+    int  fs_delete(int inumber); // nok
+    int  fs_getsize(int inumber); // ok
 
-    int  fs_read(int inumber, char *data, int length, int offset);
-    int  fs_write(int inumber, const char *data, int length, int offset);
+    int  fs_read(int inumber, char *data, int length, int offset); // nok 
+    int  fs_write(int inumber, const char *data, int length, int offset); // nok
+    
+    // metodos que criamos
     void inode_load(int inumber, fs_inode &inode);
     void inode_save(int inumber, fs_inode inode);
     int find_free_inode(fs_block *block, int ninodeblocks);
@@ -88,7 +60,6 @@ public:
 
 private:
     Disk *disk;
-    Freeblocks *free_blocks;
     bool mounted = false;
 
     // vetor de mapa de bits
@@ -96,12 +67,6 @@ private:
 
     // metodo de incializacao do mapa de bits
     void initialize_block_bitmap(int nblocks, int ninodeblocks);
-    
-    //metdo que acha os blocos indiretos
-    // vector<int> find_indirect_blocks(fs_block block, int index, int n_of_blocks);
-    
-    // metodo que acha os inodes livres
-    // int find_free_inode(union fs_block& block);
     
     // metedo de obtencao do numero do bloco do inode
     int inode_block_number(int number);

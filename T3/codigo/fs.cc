@@ -220,9 +220,21 @@ int INE5412_FS::fs_delete(int inumber)
 
     // libreracao dos blocos diretos
     for(int i = 0; i < POINTERS_PER_BLOCK; ++i){
-        if(target_inode.direct[i] != -1){
-        // Marca o bloco como livre
-        free_blocks->set(target_inode.direct[i], false);
+        // se o bloco direto não estiver com valor -1, é um bloco válido
+        int blockNum = target_inode.direct[i];
+
+        // Calcula o indice do vetor de mapa de bits usando a divisao inteira
+        int bitmapIndex = blockNum/ (sizeof(int) * 8); // obtém o numero de bits em um int
+
+        // calculo o deslocamento dentro do int usando o resto da divisao inteira
+        int offset = blockNum % (sizeof(int) * 8);
+
+        // Verifica se bloco está livre antes de marca-lo como ocupado
+        bool isFree = (block_bitmap[bitmapIndex] & (1 << offset)) == 0;
+
+        // Se o bloco estiver livre, marca-o como ocupado
+        if(isFree){
+            block_bitmap[bitmapIndex] |= (1 << offset);
         }
     }
 
@@ -230,17 +242,24 @@ int INE5412_FS::fs_delete(int inumber)
     if(target_inode.indirect != -1){
         // le o bloco indireto
         int indirect_block[POINTERS_PER_BLOCK];
-        disk->read(target_inode.indirect, (char*)&indirect_block);
+        disk->read(target_inode.indirect, reinterpret_cast<char*>(&indirect_block));
 
         // libera os blocos apontados pelo bloco indireto
         for(int i = 0; i < POINTERS_PER_BLOCK; ++i){
             if(indirect_block[i] != -1){
-                free_blocks->set(indirect_block[i], false);
+                int blockNum  = indirect_block[i];
+
+                int bitmapIndex = blockNum / (sizeof(int) * 8);
+                
+                int offset = blockNum % (sizeof(int) * 8);
+
+                bool isFree = (block_bitmap[bitmapIndex] & (1 << offset)) == 0;
+                // Se o bloco indireto estiver livre, marca-o como ocupado
+                if(isFree){
+                    block_bitmap[bitmapIndex] |= (1 << offset);
+                }
             }
         }
-
-        // libera o bloco indireto
-        free_blocks->set(target_inode.indirect, false);
     }
 
     // marca o inode como invalido e retorna ao mapa de inodes livres
@@ -412,13 +431,10 @@ int INE5412_FS::find_free_block() {
 
     // Verifica cada bloco no mapa de bits
     for (int block = 0; block < numBlocks; ++block) {
-        // se o bloco nao esta sendo usado
-        if (!free_blocks->get(block)) {
-            free_blocks->set(block, true); // Marca o bloco como usado
-            // retorna o bloco
-            return block;
+        if(block_bitmap[block] == 0){
+            block_bitmap[block] = 1;
+            return block_bitmap[block];
         }
     }
-
     return -1; // Retorna -1 se não encontrar blocos livres
 }
