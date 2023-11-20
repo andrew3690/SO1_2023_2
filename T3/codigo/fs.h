@@ -57,6 +57,9 @@ public:
     void inode_save(int inumber, fs_inode inode);
     int find_free_inode(fs_block *block, int ninodeblocks);
     vector<int> find_indirect_blocks(int indirect_block, int nblocks);
+    void set_block_as_free(int block_index);
+    void set_block_as_used(int block_index);
+    bool block_is_free(int block_index);
 
 private:
     Disk *disk;
@@ -65,7 +68,7 @@ private:
     int number_of_inode_blocks = 0;
 
     // vetor de mapa de bits
-    std::vector<int> block_bitmap {0};
+    std::vector<uint32_t> block_bitmap;
 
     // metodo de incializacao do mapa de bits
     void initialize_block_bitmap(int nblocks, int ninodeblocks);

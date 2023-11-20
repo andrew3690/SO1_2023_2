@@ -131,20 +131,25 @@ int INE5412_FS::fs_mount() {
     return 1; // Retornar um para indicar sucesso na montagem do sistema de arquivos
 }
 
+/* Responsável por varrer os inodes do disco na montagem e inicializar o bitmap de blocos livres,
+observando quais os blocos utilizados por inodes*/
 void INE5412_FS::initialize_block_bitmap(int nblocks, int ninodeblocks)
 {
     // Determinar o número total de blocos no disco
     int total_blocks = disk->size();
     // Inicializar o vetor do mapa de bits com todos os blocos livres
-    block_bitmap.resize(total_blocks, 0); // Inicializa todos os blocos como livres (0)
-    block_bitmap[0] = 1; // coloca o superbloco como ocupado
+    block_bitmap.resize(floor((total_blocks+31)/32), 0); // Inicializa todos os blocos como livres (0)
+
+    // coloca o superbloco como ocupado
+    set_block_as_used(0);
 
     union fs_block block;
 
     for (int inode_block = 1; inode_block < ninodeblocks+1; inode_block++) {
         disk->read(inode_block, block.data); // Carrega o bloco de inodes
 
-        block_bitmap[inode_block] = 1;
+        //seta os blocos reservados a inodes como ocupados
+        set_block_as_used(inode_block);
 
         // Iterar pelos inodes
         for (int i = 0; i < INODES_PER_BLOCK; ++i) {
@@ -155,25 +160,59 @@ void INE5412_FS::initialize_block_bitmap(int nblocks, int ninodeblocks)
             // Verifica se o índice do inode é válido
             if (block.inode[inode_index].isvalid == 1) {
 
-                block_bitmap[block.inode[inode_index].indirect] = 1; //bloco indireto de ponteiros em uso
+                set_block_as_used(block.inode[inode_index].indirect); //bloco indireto de ponteiros em uso
 
                 // Iterar pelos ponteiros diretos do inode
                 for (int j = 0; j < POINTERS_PER_INODE; ++j) {
                     if (block.inode[inode_index].direct[j] > 0 && block.inode[inode_index].direct[j] < nblocks) {
                         int direct_block = block.inode[inode_index].direct[j];
-                        block_bitmap[direct_block] = 1;
+                        set_block_as_used(direct_block); //blocos diretos de dados em uso
                     }
                 }
 
                 // Verificar se o ponteiro indireto aponta para um bloco válido
                 if (block.inode[inode_index].indirect > 0 && block.inode[inode_index].indirect < nblocks) {
                     for (auto& pointer: find_indirect_blocks(block.inode[inode_index].indirect, nblocks)) {
-                        block_bitmap[pointer] = 1;
+                        set_block_as_used(pointer); // blocos indiretos de dados em uso
                     }
                 }
             }
         }
     }
+
+    //teste
+    for (int i = 0; i < total_blocks; ++i) {
+        std::cout << "Block " << i << " is "
+                << (block_is_free(i) ? "free" : "used")
+                << std::endl;
+    }
+}
+
+void INE5412_FS::set_block_as_free(int block)
+{
+    int vector_index = block/32;
+    int position_bit_in_integer = block % 32;
+
+    //seta o bit do block como 0 (livre)
+    block_bitmap[vector_index] &= ~(1U << position_bit_in_integer);
+}
+
+void INE5412_FS::set_block_as_used(int block)
+{
+    int vector_index = block/32;
+    int position_bit_in_integer = block % 32;
+
+    //seta o bit do block como 1 (usado)
+    block_bitmap[vector_index] |= (1U << position_bit_in_integer);
+}
+
+bool INE5412_FS::block_is_free(int block)
+{
+    int vector_index = block/32;
+    int position_bit_in_integer = block % 32;
+
+    //verifica se bloco é 0 (livre)
+    return (block_bitmap[vector_index] & (1U << position_bit_in_integer)) == 0;
 }
 
 int INE5412_FS::fs_create() {
@@ -182,10 +221,10 @@ int INE5412_FS::fs_create() {
     }
 	// Realiza leitura do superbloco para obter informacoes sobre o sistema de arquivos
     union fs_block block;
-    disk->read(0, block.data);
+    //disk->read(0, block.data);
 
     // Encontrar um inode livre
-    int inumber = find_free_inode(&block, block.super.ninodeblocks);
+    int inumber = find_free_inode(&block, number_of_inode_blocks);
 
     if(inumber == -1){
         //  Nao ha inodes livres disponiveis
@@ -209,9 +248,14 @@ int INE5412_FS::fs_create() {
 
 int INE5412_FS::fs_delete(int inumber)
 {
+    if (!mounted) {
+        cout << "Disco não está montado!\n";
+        return 0;
+    }
 	fs_inode target_inode;
+    inode_load(inumber, target_inode);
 
-    disk->read(inumber / INODES_PER_BLOCK + 1, (char*)&target_inode);
+    //disk->read(inumber / INODES_PER_BLOCK + 1, (char*)&target_inode);
 
     cout << "entrei aqui !" << inumber << "\n";
 
@@ -220,7 +264,7 @@ int INE5412_FS::fs_delete(int inumber)
     }
 
     // libreracao dos blocos diretos
-    for(int i = 0; i < POINTERS_PER_BLOCK; ++i){
+    for(int i = 0; i < POINTERS_PER_INODE; ++i){
         // se o bloco direto não estiver com valor -1, é um bloco válido
         int blockNum = target_inode.direct[i];
 
