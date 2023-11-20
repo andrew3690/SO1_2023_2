@@ -61,9 +61,11 @@ public:
 private:
     Disk *disk;
     bool mounted = false;
+    int number_of_blocks = 0;
+    int number_of_inode_blocks = 0;
 
     // vetor de mapa de bits
-    std::vector<int> block_bitmap;
+    std::vector<int> block_bitmap {0};
 
     // metodo de incializacao do mapa de bits
     void initialize_block_bitmap(int nblocks, int ninodeblocks);

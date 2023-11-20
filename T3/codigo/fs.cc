@@ -106,7 +106,6 @@ vector<int> INE5412_FS::find_indirect_blocks(int indirect_block, int nblocks)
 
 
 int INE5412_FS::fs_mount() {
-    // Inserir aqui uma verificacao se o sistema de arquivos já está montado
     if(mounted == true){
         return 0; // se a flag de montagem de arquivos for verdade, o sistema jah foi montado
     }
@@ -121,14 +120,14 @@ int INE5412_FS::fs_mount() {
         return 0; // Retornar zero para indicar falha na montagem do sistema de arquivos
     }
 
-    // int number_of_blocks = block.super.nblocks;
-    // int number_of_inode_blocks = block.super.ninodeblocks;
+    number_of_blocks = block.super.nblocks;
+    number_of_inode_blocks = block.super.ninodeblocks;
 
     // Inicializar o mapa de bits dos blocos livres/ocupados
     initialize_block_bitmap(block.super.nblocks, block.super.ninodeblocks);
 
     mounted = true;
-    
+
     return 1; // Retornar um para indicar sucesso na montagem do sistema de arquivos
 }
 
@@ -274,8 +273,7 @@ int INE5412_FS::fs_getsize(int inumber)
 {
     fs_inode target_inode;
 
-    // Realiza leitura do inode
-    disk->read(inumber/ INODES_PER_BLOCK + 1, (char*)&target_inode);
+    inode_load(inumber, target_inode);
 
     // verifica a validade do inode
     if(target_inode.isvalid != 1){
@@ -315,7 +313,7 @@ int INE5412_FS::fs_read(int inumber, char *data, int length, int offset)
     }
 
     // itera pelos ponteiros no bloco indireto do inode
-    for (auto& data_block: find_indirect_blocks(inode.indirect, block.super.nblocks)) {
+    for (auto& data_block: find_indirect_blocks(inode.indirect, number_of_blocks)) {
         if (data_block > 0) {
             disk->read(data_block, block.data);
             for (auto& byte: block.data) {
