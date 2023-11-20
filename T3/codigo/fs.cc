@@ -213,6 +213,8 @@ int INE5412_FS::fs_delete(int inumber)
 
     disk->read(inumber / INODES_PER_BLOCK + 1, (char*)&target_inode);
 
+    cout << "entrei aqui !" << inumber << "\n";
+
     if(target_inode.isvalid != 1){
         return 0;
     }
@@ -429,8 +431,11 @@ int INE5412_FS::find_free_block() {
 
     // Verifica cada bloco no mapa de bits
     for (int block = 0; block < numBlocks; ++block) {
+        // se um bloco está livre
         if(block_bitmap[block] == 0){
+            // marca-o como usado
             block_bitmap[block] = 1;
+            // e retorna-o
             return block_bitmap[block];
         }
     }
