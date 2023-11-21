@@ -46,7 +46,7 @@ public:
     int  fs_mount(); // ok
 
     int  fs_create(); // ok
-    int  fs_delete(int inumber); // nok
+    int  fs_delete(int inumber); // ok
     int  fs_getsize(int inumber); // ok
 
     int  fs_read(int inumber, char *data, int length, int offset); // nok
