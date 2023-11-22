@@ -49,14 +49,16 @@ public:
     int  fs_delete(int inumber); // ok
     int  fs_getsize(int inumber); // ok
 
-    int  fs_read(int inumber, char *data, int length, int offset); // nok
-    int  fs_write(int inumber, const char *data, int length, int offset); // ok
+    int  fs_read(int inumber, char *data, int length, int offset); // ok
+    int  fs_write(int inumber, const char *data, int length, int offset); // nok
     
     // metodos que criamos
     void inode_load(int inumber, fs_inode &inode);
     void inode_save(int inumber, fs_inode inode);
     int find_free_inode(fs_block *block, int ninodeblocks);
     vector<int> find_indirect_blocks(int indirect_block, int nblocks);
+
+    // métodos para o bitmap de blocos livres
     void set_block_as_free(int block_index);
     void set_block_as_used(int block_index);
     bool block_is_free(int block_index);
@@ -73,8 +75,9 @@ private:
     // metodo de incializacao do mapa de bits
     void initialize_block_bitmap(int nblocks, int ninodeblocks);
     
-    // metedo de obtencao do numero do bloco do inode
-    int inode_block_number(int number);
+    // metodo de obtencao do numero do bloco do inode
+    //int inode_block_number(int number);
+
     int find_free_block();
 
 };

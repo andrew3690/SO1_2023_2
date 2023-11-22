@@ -229,6 +229,11 @@ int INE5412_FS::fs_create() {
     // Escreve o bloco de inodes de volta no disco para salvar as alteracoes
     inode_save(inumber, block.inode[inumber]);
 
+    for (int i = 0; i < 20; ++i) {
+        std::cout << "Block " << i << " is "
+                << (block_is_free(i) ? "free" : "used")
+                << std::endl;
+    }
     // retorna o numero inode criado
     return inumber + 1;
     
@@ -355,9 +360,13 @@ int INE5412_FS::fs_read(int inumber, char *data, int length, int offset)
 
 int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
 {
+    if (!mounted) {
+        return 0;
+    }
+
     // Realiza leitura do inode
     fs_inode target_inode;
-    disk->read(inumber / INODES_PER_BLOCK + 1,(char*)&target_inode);
+    inode_load(inumber, target_inode);
 
     // verifica se o inode eh valido
     if (target_inode.isvalid != 1 || offset < 0){
@@ -372,26 +381,36 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
 
     // loop que escreve em blocos diretos
     for(int i = startBlock; i <= endblock; ++i){
-        // enquanto os contador estiver menor que a quantiodade de ponteiros por inode
+        // enquanto os contador estiver menor que a quantidade de ponteiros por inode
         if(i < POINTERS_PER_INODE){
-            // Aqui verifica se o bloco direto estah alocado
-            if(target_inode.direct[i] == -1){
-                // se sim aloca um novo bloco direto
+            // Aqui verifica se o bloco direto nao esta alocado
+            if(target_inode.direct[i] == 0){
+                // se verdadeiro aloca um novo bloco direto
                 int newblock = find_free_block();
                 if (newblock == -1){
                 // se nao, que dizer que nao ha blocos livres, retornando o numero de bytes escritos ate o momento
                     return bytesw;
                 }
                 target_inode.direct[i] = newblock;
+                set_block_as_used(newblock);
             }
             // Escreve os dados no bloco
+            // REVER A POSIÇAO DISSO AQ NAS CONDIÇOES DE CONTORNO
             int blockOffset = offset % Disk::DISK_BLOCK_SIZE;
             int bytesToWrite = std::min(Disk::DISK_BLOCK_SIZE - blockOffset, length - bytesw);
-            
+
             disk->write(target_inode.direct[i], data + bytesw);
             bytesw += bytesToWrite;
         } else {
             // Lógica para blocos indiretos, ainda tenho que pensar nessa parte
+            if (target_inode.indirect == 0) {
+                int new_indirect_block = find_free_block();
+                if (new_indirect_block == -1) {
+                    return bytesw;
+                }
+                target_inode.indirect = new_indirect_block;
+                set_block_as_used(new_indirect_block);
+            }
         }
     }
 
@@ -401,7 +420,7 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
     }
 
     // Escreve o inode de volta no disco
-    disk->write(inumber / INODES_PER_BLOCK + 1, (char*)&target_inode);
+    inode_save(inumber, target_inode);
 
     return bytesw; // Retorna o número de bytes escritos
 }
@@ -440,7 +459,6 @@ void INE5412_FS::inode_save(int inumber, fs_inode inode)
     disk->read(disk_block, block.data);
     block.inode[inumber % INODES_PER_BLOCK] = inode;
     disk->write(disk_block, block.data);
-
 }
 
 /* retorna primeiro bloco livre encontrado no bitmap */
