@@ -377,7 +377,7 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
 
     // calculo do numero de blocos necessarios com base no deslocamento e no comprimento do bloco
     int startBlock = offset / Disk::DISK_BLOCK_SIZE;
-    int endblock = (offset + length) / Disk::DISK_BLOCK_SIZE;
+    int endblock = ceil(float(offset + length) / float(Disk::DISK_BLOCK_SIZE));
 
     // loop que escreve em blocos
     for(int i = startBlock; i < endblock; ++i) {
