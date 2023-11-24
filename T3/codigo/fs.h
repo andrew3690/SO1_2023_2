@@ -74,9 +74,6 @@ private:
 
     // metodo de incializacao do mapa de bits
     void initialize_block_bitmap(int nblocks, int ninodeblocks);
-    
-    // metodo de obtencao do numero do bloco do inode
-    //int inode_block_number(int number);
 
     int find_free_block();
 
