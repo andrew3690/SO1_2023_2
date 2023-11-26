@@ -224,13 +224,8 @@ int INE5412_FS::fs_create() {
     // Escreve o bloco de inodes de volta no disco para salvar as alteracoes
     inode_save(inumber, block.inode[inumber]);
 
-    for (int i = 0; i < 20; ++i) {
-        std::cout << "Block " << i << " is "
-                << (block_is_free(i) ? "free" : "used")
-                << std::endl;
-    }
     // retorna o numero inode criado
-    return inumber + 1;
+    return inumber +1;
     
 }
 
@@ -406,24 +401,29 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
                 set_block_as_used(new_indirect_pointer_block);
             }
 
-            // aloca um bloco de dados novo
-            int new_indirect_data_block = find_free_block();
-            if (new_indirect_data_block == -1) {
-                cout << "Não há mais blocos livres disponíveis!\n";
-                return bytesw;
-            }
             fs_block indirect_pointer_block;
-
-            // le o bloco indireto de ponteiros
             disk->read(target_inode.indirect, indirect_pointer_block.data);
-            indirect_pointer_block.pointers[i-POINTERS_PER_INODE] = new_indirect_data_block; // coloca o ponteiro do bloco de dados no bloco indireto
-            disk->write(target_inode.indirect, indirect_pointer_block.data); // escreve o bloco indireto de volta no disco
-            set_block_as_used(new_indirect_data_block); // aloca como usado o bloco de dados
+            int indirect_data_block = indirect_pointer_block.pointers[i-POINTERS_PER_INODE]; // bloco de dados indireto alocado 
+
+            // verificando se este eh zero:
+            if(indirect_pointer_block.pointers[i-POINTERS_PER_INODE] == 0){
+                // aloca um bloco de dados novo
+                int new_indirect_data_block = find_free_block();
+                if (new_indirect_data_block == -1) {
+                    cout << "Não há mais blocos livres disponíveis!\n";
+                    return bytesw;
+                }
+                // le o bloco indireto de ponteiros
+                indirect_pointer_block.pointers[i-POINTERS_PER_INODE] = new_indirect_data_block; // coloca o ponteiro do bloco de dados no bloco indireto
+                disk->write(target_inode.indirect, indirect_pointer_block.data); // escreve o bloco indireto de volta no disco
+                set_block_as_used(new_indirect_data_block); // aloca como usado o bloco de dados
+            }
+
 
             int blockOffset = offset % Disk::DISK_BLOCK_SIZE;
             int bytesToWrite = std::min(Disk::DISK_BLOCK_SIZE - blockOffset, length - bytesw);
 
-            disk->write(new_indirect_data_block, data + bytesw); // escreve 4kb de dados no bloco indireto
+            disk->write(indirect_data_block, data + bytesw); // escreve 4kb de dados no bloco indireto
             bytesw += bytesToWrite;
 
         } else {
