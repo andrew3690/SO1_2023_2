@@ -401,24 +401,28 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
                 set_block_as_used(new_indirect_pointer_block);
             }
 
+            // le o bloco indireto de ponteiros
             fs_block indirect_pointer_block;
             disk->read(target_inode.indirect, indirect_pointer_block.data);
             int indirect_data_block = indirect_pointer_block.pointers[i-POINTERS_PER_INODE]; // bloco de dados indireto alocado 
 
             // verificando se este eh zero:
-            if(indirect_pointer_block.pointers[i-POINTERS_PER_INODE] == 0){
+            if(indirect_data_block == 0){
+
                 // aloca um bloco de dados novo
                 int new_indirect_data_block = find_free_block();
                 if (new_indirect_data_block == -1) {
                     cout << "Não há mais blocos livres disponíveis!\n";
                     return bytesw;
                 }
-                // le o bloco indireto de ponteiros
-                indirect_pointer_block.pointers[i-POINTERS_PER_INODE] = new_indirect_data_block; // coloca o ponteiro do bloco de dados no bloco indireto
+
+                indirect_data_block = new_indirect_data_block;
+
+                // coloca o ponteiro do bloco de dados no bloco indireto
+                indirect_pointer_block.pointers[i-POINTERS_PER_INODE] = indirect_data_block; 
                 disk->write(target_inode.indirect, indirect_pointer_block.data); // escreve o bloco indireto de volta no disco
                 set_block_as_used(new_indirect_data_block); // aloca como usado o bloco de dados
             }
-
 
             int blockOffset = offset % Disk::DISK_BLOCK_SIZE;
             int bytesToWrite = std::min(Disk::DISK_BLOCK_SIZE - blockOffset, length - bytesw);
@@ -428,7 +432,7 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
 
         } else {
             // não há mais espaço para ponteiros para blocos no inode
-            cout << "Arquivo chegou ao fim! Não ha mais espaço para ponteiros disponível!\n";
+            cout << "Arquivo chegou ao fim! Não ha mais espaço para ponteiros disponível em um inode!\n";
         }
     }
 
