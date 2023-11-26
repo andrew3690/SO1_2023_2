@@ -330,7 +330,7 @@ int INE5412_FS::fs_read(int inumber, char *data, int length, int offset)
     }
 
     //copia a partir do offset o conteudo do inode no buffer
-    for (long unsigned int i = 0 + offset; i < inode_content.size(); i++) {
+    for (int i = 0 + offset; i < inode.size; i++) {
         if (read_bytes == 16384) {
             break;
         }
