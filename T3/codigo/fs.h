@@ -50,7 +50,7 @@ public:
     int  fs_getsize(int inumber); // ok
 
     int  fs_read(int inumber, char *data, int length, int offset); // ok
-    int  fs_write(int inumber, const char *data, int length, int offset); // nok
+    int  fs_write(int inumber, const char *data, int length, int offset); // ok
     
     // metodos que criamos
     void inode_load(int inumber, fs_inode &inode);
