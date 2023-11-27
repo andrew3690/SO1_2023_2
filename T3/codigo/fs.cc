@@ -376,6 +376,7 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
                 if (newblock == -1){
                 // se nao, que dizer que nao ha blocos livres, retornando o numero de bytes escritos ate o momento
                     cout << "Não há mais blocos livres disponíveis!\n";
+                    inode_save(inumber, target_inode);
                     return bytesw;
                 }
                 target_inode.direct[i] = newblock;
@@ -404,6 +405,7 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
                 int new_indirect_pointer_block = find_free_block();
                 if (new_indirect_pointer_block == -1) {
                     cout << "Não há mais blocos livres disponíveis!\n";
+                    inode_save(inumber, target_inode);
                     return bytesw;
                 }
                 target_inode.indirect = new_indirect_pointer_block;
@@ -422,6 +424,7 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
                 int new_indirect_data_block = find_free_block();
                 if (new_indirect_data_block == -1) {
                     cout << "Não há mais blocos livres disponíveis!\n";
+                    inode_save(inumber, target_inode);
                     return bytesw;
                 }
 
