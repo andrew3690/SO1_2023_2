@@ -247,6 +247,7 @@ int INE5412_FS::fs_delete(int inumber)
     for(int i = 0; i < POINTERS_PER_INODE; ++i){
         if (target_inode.direct[i] > 0){
             set_block_as_free(target_inode.direct[i]);
+            target_inode.direct[i] = 0;
         }
     }
 
@@ -254,6 +255,7 @@ int INE5412_FS::fs_delete(int inumber)
     if(target_inode.indirect > 0){
         // le o bloco indireto
         set_block_as_free(target_inode.indirect); // bloco indireto de ponteiros liberado no bitmap
+        target_inode.indirect = 0;
 
         // libera os blocos apontados pelo bloco indireto
         for(auto block: find_indirect_blocks(target_inode.indirect,number_of_blocks)){
