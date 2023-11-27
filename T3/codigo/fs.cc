@@ -380,11 +380,18 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
                 set_block_as_used(newblock);
             }
             // Escreve os dados no bloco
-            // REVER A POSIÇAO DISSO AQ NAS CONDIÇOES DE CONTORNO
             int blockOffset = offset % Disk::DISK_BLOCK_SIZE;
             int bytesToWrite = std::min(Disk::DISK_BLOCK_SIZE - blockOffset, length - bytesw);
 
-            disk->write(target_inode.direct[i], data + bytesw);
+            fs_block block_write;
+            for (int k = 0; k < 4096; k++) {
+                block_write.data[k] = 0;
+            }
+            for (int k = 0; k < bytesToWrite; k++) {
+                block_write.data[k] = data[bytesw + k];
+            }
+
+            disk->write(target_inode.direct[i], block_write.data);
             bytesw += bytesToWrite;
 
         } else if (i < POINTERS_PER_BLOCK) {
@@ -426,8 +433,16 @@ int INE5412_FS::fs_write(int inumber, const char *data, int length, int offset)
 
             int blockOffset = offset % Disk::DISK_BLOCK_SIZE;
             int bytesToWrite = std::min(Disk::DISK_BLOCK_SIZE - blockOffset, length - bytesw);
+            
+            fs_block block_write;
+            for (int k = 0; k < 4096; k++) {
+                block_write.data[k] = 0;
+            }
+            for (int k = 0; k < bytesToWrite; k++) {
+                block_write.data[k] = data[bytesw + k];
+            }
 
-            disk->write(indirect_data_block, data + bytesw); // escreve 4kb de dados no bloco indireto
+            disk->write(indirect_data_block, block_write.data); // escreve 4kb de dados no bloco indireto
             bytesw += bytesToWrite;
 
         } else {
